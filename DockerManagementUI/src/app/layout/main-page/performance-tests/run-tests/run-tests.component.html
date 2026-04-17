@@ -1,0 +1,65 @@
+<mat-card class="shadow-sm border-0 rounded-4 mb-3" appearance="outlined">
+  <mat-card-content class="p-3">
+    <h2 class="h5 mb-3 d-flex align-items-center fw-bold">
+      <mat-icon class="me-2 text-primary icon-lg">speed</mat-icon>
+      Actions
+    </h2>
+
+    <div class="d-flex flex-wrap gap-2 align-items-stretch">
+      <mat-form-field appearance="outline" class="flex-grow-1">
+        <mat-label>Simulation type</mat-label>
+        <mat-select
+          #simulationSelect
+          [value]="selectedSimulationType()"
+          [disabled]="runLoading() || simulationTypes().length === 0"
+          (selectionChange)="simulationTypeSelected.emit($event.value)"
+        >
+          @for (simulationType of simulationTypes(); track simulationType) {
+            <mat-option [value]="simulationType">{{ formatSimulationType(simulationType) }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <button
+        mat-flat-button
+        color="primary"
+        class="px-4 rounded-3 control-button"
+        (click)="runTestsClicked.emit()"
+        [disabled]="!canStart()"
+      >
+        @if (runLoading()) {
+          <div class="d-flex align-items-center justify-content-center">
+            <mat-spinner diameter="20" class="me-2"></mat-spinner>
+            <span>Running...</span>
+          </div>
+        } @else {
+          <div class="d-flex align-items-center justify-content-center">
+            <mat-icon class="me-2">play_arrow</mat-icon>
+            <span>Start Test</span>
+          </div>
+        }
+      </button>
+    </div>
+
+    @if (environmentNotStarted()) {
+      <div class="alert alert-info mt-2 mb-0 d-flex align-items-center" role="status" aria-live="polite">
+        <mat-icon class="me-2">info</mat-icon>
+        Start environment first to choose database and volume before running performance tests.
+      </div>
+    }
+
+    @if (simulationOptionsUnavailable()) {
+      <div class="alert alert-warning mt-2 mb-0 d-flex align-items-center" role="alert" aria-live="polite">
+        <mat-icon class="me-2">warning</mat-icon>
+        Simulation options are temporarily unavailable. Please reload the page or try again later.
+      </div>
+    }
+
+    @if (runError()) {
+      <div class="alert alert-danger mt-2 mb-0 d-flex align-items-center" role="alert" aria-live="polite">
+          <mat-icon class="me-2">error</mat-icon>
+          {{ runError() }}
+      </div>
+    }
+  </mat-card-content>
+</mat-card>

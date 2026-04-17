@@ -1,0 +1,130 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Docker Containers</h2>
+    <div class="d-flex gap-2">
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="refreshContainers()"
+        [disabled]="isLoading()"
+        title="Refresh containers list"
+      >
+        <mat-icon>refresh</mat-icon>
+        Refresh
+      </button>
+      <button mat-flat-button color="warn" (click)="stopAllContainers()" [disabled]="isLoading()">
+        <mat-icon>stop_circle</mat-icon>
+        Stop All Containers
+      </button>
+    </div>
+  </div>
+
+  <div class="table-container">
+    @if (isLoading()) {
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+    <div class="table-responsive">
+      <table mat-table [dataSource]="containers()" class="w-100">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef>ID</th>
+          <td mat-cell *matCellDef="let element">
+            @if (element.id) {
+              <code [title]="element.id" class="id-cell">{{ element.id.substring(0, 8) }}</code>
+            } @else {
+              <span>-</span>
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let element">{{ element.name || '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="state">
+          <th mat-header-cell *matHeaderCellDef>State</th>
+          <td mat-cell *matCellDef="let element">
+            <span class="badge {{ getStateBadgeClass(element.state) }}">
+              {{ element.state || 'UNKNOWN' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="image">
+          <th mat-header-cell *matHeaderCellDef>Image</th>
+          <td mat-cell *matCellDef="let element">{{ element.image || '-' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="volumes">
+          <th mat-header-cell *matHeaderCellDef>Volumes</th>
+          <td mat-cell *matCellDef="let element">{{ getVolumesDisplay(element) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let element">
+            <div class="actions d-flex align-items-center">
+              @if (isContainerLoading(element)) {
+                <div
+                  class="action-loading-placeholder d-flex align-items-center justify-content-center"
+                >
+                  <mat-spinner diameter="24"></mat-spinner>
+                  <span class="visually-hidden">Processing container action...</span>
+                </div>
+              } @else {
+                <button
+                  mat-icon-button
+                  color="accent"
+                  class="me-2"
+                  (click)="stopContainer(element)"
+                  [disabled]="
+                    !isActionEnabled(element, 'stop') || isLoading() || isContainerLoading(element)
+                  "
+                  title="Stop container"
+                  aria-label="Stop container"
+                >
+                  <mat-icon>stop</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  color="warn"
+                  (click)="deleteContainer(element)"
+                  [disabled]="
+                    !isActionEnabled(element, 'delete') ||
+                    isLoading() ||
+                    isContainerLoading(element)
+                  "
+                  title="Delete container"
+                  aria-label="Delete container"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              }
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell text-center p-4 text-muted" [attr.colspan]="displayedColumns.length">
+            @if (isLoading()) {
+              <div
+                class="table-loading-placeholder d-flex align-items-center justify-content-center"
+              >
+                <mat-spinner diameter="32"></mat-spinner>
+                <span class="visually-hidden">Loading containers...</span>
+              </div>
+            } @else {
+              <div class="alert alert-info d-inline-block m-0" role="alert">
+                <i class="bi bi-info-circle me-2"></i>
+                No containers found.
+              </div>
+            }
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,78 @@
+<mat-card class="shadow-sm border-0 rounded-4 mb-3" appearance="outlined">
+  <mat-card-content class="p-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="h5 mb-0 d-flex align-items-center fw-bold">
+        <mat-icon class="me-2 text-primary icon-lg">list_alt</mat-icon>
+        Available Runs
+      </h2>
+      @if (runsLoading()) {
+        <div class="d-flex align-items-center text-muted small">
+          <mat-spinner diameter="16" class="me-2"></mat-spinner>
+          Loading runs...
+        </div>
+      }
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 align-items-stretch">
+      <mat-form-field appearance="outline" class="flex-grow-1">
+        <mat-label>Select a run</mat-label>
+        <mat-select
+          [value]="selectedRunId() ?? ''"
+          [disabled]="runsLoading() || runs().length === 0"
+          (selectionChange)="runSelected.emit($event.value)"
+        >
+          <mat-option value="">-- Choose run --</mat-option>
+          @for (run of runs(); track run.runId) {
+            <mat-option [value]="run.runId">
+              {{ run.runId }} <span class="text-muted ms-2">{{ run.startedAt | date: 'yyyy-MM-dd HH:mm:ss' }}</span>
+            </mat-option>
+          }
+        </mat-select>
+        <mat-hint>The backend provides the list in newest-first order.</mat-hint>
+      </mat-form-field>
+
+      <button
+        mat-stroked-button
+        class="px-4 rounded-3 control-button"
+        (click)="refreshClicked.emit()"
+        [disabled]="runsLoading() || runLoading()"
+      >
+        <div class="d-flex align-items-center justify-content-center">
+          <mat-icon class="me-1">refresh</mat-icon>
+          <span>Refresh Runs</span>
+        </div>
+      </button>
+    </div>
+
+    @if (runsError()) {
+      <div class="alert alert-danger mt-3 mb-0 d-flex align-items-center" role="alert" aria-live="polite">
+          <mat-icon class="me-2">error</mat-icon>
+          {{ runsError() }}
+      </div>
+    }
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="shadow-sm border-0 rounded-4" appearance="outlined">
+  <mat-card-content class="p-3">
+    <h2 class="h5 mb-3 d-flex align-items-center fw-bold">
+      <mat-icon class="me-2 text-primary icon-lg">assessment</mat-icon>
+      Run Report
+    </h2>
+
+    @if (reportError()) {
+      <div class="alert alert-danger mb-4 d-flex align-items-center" role="alert" aria-live="polite">
+        <mat-icon class="me-2">broken_image</mat-icon>
+        {{ reportError() }}
+      </div>
+    }
+
+    <app-report-viewer
+      [reportUrl]="reportUrl()"
+      [loading]="reportLoading()"
+      [title]="selectedRunId() ? 'Report for ' + selectedRunId() : 'Performance test report'"
+      (loaded)="reportLoaded.emit()"
+      (loadFailed)="reportLoadFailed.emit()"
+    />
+  </mat-card-content>
+</mat-card>

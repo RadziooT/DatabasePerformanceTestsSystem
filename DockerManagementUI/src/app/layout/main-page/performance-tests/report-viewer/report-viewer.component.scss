@@ -1,0 +1,27 @@
+.report-viewer {
+  width: 100%;
+  min-height: 200px;
+}
+
+.report-frame {
+  width: 100%;
+  min-height: 85vh;
+  border: 1px solid #dee2e6;
+  background: #fff;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.report-loading-overlay {
+  z-index: 10;
+}
+
+.report-placeholder {
+  min-height: 200px;
+}
+
+.icon-xl {
+  font-size: 3rem;
+  height: 48px;
+  width: 48px;
+  opacity: 0.3;
+}

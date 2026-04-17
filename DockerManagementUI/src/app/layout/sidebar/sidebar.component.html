@@ -1,0 +1,24 @@
+<div class="d-flex flex-column flex-shrink-0 p-3 h-100 bg-white">
+  <div class="d-flex align-items-center justify-content-between mb-3 mb-md-0 link-dark text-decoration-none">
+    <span class="fs-4">Performance Tests</span>
+    <button mat-icon-button (click)="toggleSidebar.emit()" title="Hide Sidebar" aria-label="Hide Sidebar">
+      <mat-icon>menu_open</mat-icon>
+    </button>
+  </div>
+  <hr>
+  <ul class="nav nav-pills flex-column mb-auto">
+    @for (item of navItems; track item.path) {
+      <li class="nav-item">
+        <a
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          class="nav-link link-dark"
+          [class.active]="false"
+        >
+          <i [class]="'bi bi-' + item.icon + ' me-2'"></i>
+          {{ item.label }}
+        </a>
+      </li>
+    }
+  </ul>
+</div>

@@ -1,0 +1,13 @@
+.nav-link {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.nav-link:hover {
+  background-color: #e9ecef;
+}
+
+.nav-link.active {
+  background-color: #0d6efd;
+  color: white;
+}

@@ -1,0 +1,120 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Docker Volumes</h2>
+    <div class="d-flex gap-2">
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="refreshVolumes()"
+        [disabled]="isLoading()"
+        title="Refresh volumes list"
+      >
+        <mat-icon>refresh</mat-icon>
+        Refresh
+      </button>
+      <button
+        mat-flat-button
+        color="warn"
+        (click)="removeAllVolumes()"
+        [disabled]="isLoading() || volumes().length === 0"
+      >
+        <mat-icon>delete</mat-icon>
+        Remove All Volumes
+      </button>
+    </div>
+  </div>
+
+  <div class="table-container">
+    @if (isLoading()) {
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+
+    <div class="table-responsive">
+      <table mat-table [dataSource]="volumes()" class="w-100">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Volume Name</th>
+          <td mat-cell *matCellDef="let volume">
+            @if (volume.name) {
+              <code [title]="volume.name" class="id-cell">{{ volume.name }}</code>
+            } @else {
+              <span>-</span>
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="mountpoint">
+          <th mat-header-cell *matHeaderCellDef>Mountpoint</th>
+          <td mat-cell *matCellDef="let volume">
+            <small class="text-muted">{{ volume.mountpoint || '-' }}</small>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let volume">
+            <span
+              class="badge"
+              [class.bg-success]="isVolumeCreated(volume)"
+              [class.bg-secondary]="!isVolumeCreated(volume)"
+            >
+              {{ volume.status || 'UNKNOWN' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let volume">
+            <div class="actions d-flex align-items-center">
+              @if (isVolumeLoading(volume.name)) {
+                <div
+                  class="action-loading-placeholder d-flex align-items-center justify-content-center"
+                >
+                  <mat-spinner diameter="24"></mat-spinner>
+                  <span class="visually-hidden">Processing volume action...</span>
+                </div>
+              } @else {
+                <button
+                  mat-icon-button
+                  color="warn"
+                  (click)="deleteVolume(volume)"
+                  [disabled]="
+                    !isVolumeCreated(volume) ||
+                    isLoading() ||
+                    !volume.name ||
+                    isVolumeLoading(volume.name)
+                  "
+                  title="Delete volume"
+                  aria-label="Delete volume"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              }
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell text-center p-4 text-muted" [attr.colspan]="displayedColumns.length">
+            @if (isLoading()) {
+              <div
+                class="table-loading-placeholder d-flex align-items-center justify-content-center"
+              >
+                <mat-spinner diameter="32"></mat-spinner>
+                <span class="visually-hidden">Loading volumes...</span>
+              </div>
+            } @else {
+              <div class="alert alert-info d-inline-block m-0" role="alert">
+                <i class="bi bi-info-circle me-2"></i>
+                No volumes found.
+              </div>
+            }
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

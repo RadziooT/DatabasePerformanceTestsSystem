@@ -1,0 +1,60 @@
+<section class="container-fluid py-5" aria-labelledby="info-page-title">
+  <header class="mb-5 text-center">
+    <h1 id="info-page-title" class="display-6 fw-bold mb-3">Performance Tests UI</h1>
+    <p class="lead text-muted mx-auto info-description">
+      This dashboard gives you one place to understand and control the testing environment before
+      running any performance scenarios.
+    </p>
+  </header>
+
+  <div class="row g-4 justify-content-center mx-auto info-container">
+
+    <div class="col-12 col-md-6 col-lg-4 d-flex">
+      <mat-card class="shadow-sm border-0 rounded-4 flex-fill" appearance="outlined">
+        <mat-card-content class="p-4 d-flex flex-column h-100">
+          <div class="d-flex align-items-center mb-3">
+            <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-3 me-3 d-flex">
+              <mat-icon class="icon-md">view_in_ar</mat-icon>
+            </div>
+            <h2 id="docker-resources-heading" class="h5 mb-0 fw-bold">Docker Resources</h2>
+          </div>
+          <p class="text-muted mb-0 flex-grow-1 card-description">
+            Monitor and control your testing infrastructure. The <strong>Containers</strong> view lets you verify service health and manage their lifecycle, while the <strong>Volumes</strong> view allows you to inspect and safely remove unused Docker storage volumes.
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4 d-flex">
+      <mat-card class="shadow-sm border-0 rounded-4 flex-fill" appearance="outlined">
+        <mat-card-content class="p-4 d-flex flex-column h-100">
+          <div class="d-flex align-items-center mb-3">
+            <div class="bg-warning bg-opacity-10 text-warning d-flex rounded-circle p-3 me-3">
+              <mat-icon class="icon-md">settings_applications</mat-icon>
+            </div>
+            <h2 id="environment-management-heading" class="h5 mb-0 fw-bold">Environment Management</h2>
+          </div>
+          <p class="text-muted mb-0 flex-grow-1 card-description">
+            Prepare the system for testing. Use <strong>Environment Start</strong> to spin up specific combinations of database and application containers, and <strong>Data Generation</strong> to automatically populate your configured database with realistic datasets.
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4 d-flex">
+      <mat-card class="shadow-sm border-0 rounded-4 flex-fill" appearance="outlined">
+        <mat-card-content class="p-4 d-flex flex-column h-100">
+          <div class="d-flex align-items-center mb-3">
+            <div class="bg-danger bg-opacity-10 text-danger rounded-circle p-3 me-3 d-flex">
+              <mat-icon class="icon-md">speed</mat-icon>
+            </div>
+            <h2 id="performance-tests-heading" class="h5 mb-0 fw-bold">Performance Tests</h2>
+          </div>
+          <p class="text-muted mb-0 flex-grow-1 card-description">
+            Execute load tests and analyze results. <strong>Run Tests</strong> allows you to trigger predefined Gatling simulation scenarios, while <strong>Previous Runs</strong> lets you browse execution history and inspect detailed HTML performance reports seamlessly.
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</section>

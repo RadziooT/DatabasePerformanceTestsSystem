@@ -1,0 +1,25 @@
+<mat-sidenav-container class="w-100 h-100 bg-light">
+  <mat-sidenav mode="side" [opened]="isSidebarOpen()" class="shadow-sm border-end bg-white sidebar">
+    <app-sidebar (toggleSidebar)="toggleSidebar()" />
+  </mat-sidenav>
+
+  <mat-sidenav-content class="d-flex flex-column h-100 position-relative">
+    @if (!isSidebarOpen()) {
+      <button
+        mat-mini-fab
+        class="position-absolute shadow-sm toggle-sidebar-button"
+        (click)="toggleSidebar()"
+        title="Show Sidebar"
+        aria-label="Show Sidebar"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+    }
+    <main
+      class="flex-grow-1 p-4 main-content"
+      [style.padding-left]="!isSidebarOpen() ? '4.5rem' : '1.5rem'"
+    >
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

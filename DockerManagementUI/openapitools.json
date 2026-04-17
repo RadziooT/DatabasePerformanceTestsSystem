@@ -1,0 +1,25 @@
+{
+  "generator-cli": {
+    "version": "7.2.0",
+    "generators": {
+      "typescript-angular": {
+        "generatorName": "typescript-angular",
+        "output": "./src/app/api",
+        "glob": "./openapi/api-spec.yaml",
+        "additionalProperties": {
+          "ngVersion": "18.0.0",
+          "npmName": "performance-tests-api",
+          "npmVersion": "1.0.0",
+          "supportsES6": true,
+          "withInterfaces": true,
+          "useSingleRequestParameter": true,
+          "fileNaming": "kebab-case",
+          "modelFileSuffix": ".model",
+          "serviceFileSuffix": ".service",
+          "enumNameSuffix": "Enum",
+          "enumPropertyNaming": "original"
+        }
+      }
+    }
+  }
+}

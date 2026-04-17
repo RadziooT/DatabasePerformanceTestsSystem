@@ -1,0 +1,144 @@
+<div class="container-fluid py-1">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-6">
+      <h2 class="mb-3 d-flex align-items-center">
+        <mat-icon class="me-2 icon-lg">database</mat-icon>
+        Data Generation
+      </h2>
+
+      <form
+        [formGroup]="generationForm"
+        (ngSubmit)="generateData()"
+        class="d-flex flex-column gap-2"
+      >
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Database Type</mat-label>
+          <mat-select formControlName="databaseType" required>
+            <mat-option value="">-- None --</mat-option>
+            @for (databaseType of databaseTypes; track databaseType) {
+              <mat-option [value]="databaseType">{{ databaseType }}</mat-option>
+            }
+          </mat-select>
+          @if (generationForm.controls.databaseType.hasError('required')) {
+            <mat-error>Please select a database type</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100 mt-1">
+          <mat-label>Volume</mat-label>
+          <mat-select formControlName="volumeType" required>
+            <mat-option value="">-- None --</mat-option>
+            @for (volumeType of volumeTypes; track volumeType) {
+              <mat-option [value]="volumeType">{{ volumeType }}</mat-option>
+            }
+          </mat-select>
+          @if (generationForm.controls.volumeType.hasError('required')) {
+            <mat-error>Please select a volume</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="d-flex align-items-center gap-2 mt-2">
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            [disabled]="!canStart()"
+            class="py-3 px-4 rounded-3 fs-6 flex-grow-1"
+          >
+            @if (isSubmitting()) {
+              <mat-spinner diameter="24" class="me-2 d-inline-block align-middle"></mat-spinner>
+              Starting...
+            } @else {
+              <div class="d-flex align-items-center justify-content-center">
+                <mat-icon class="me-2">play_circle</mat-icon>
+                Generate Data
+              </div>
+            }
+          </button>
+
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="refreshStatus()"
+            [disabled]="isStatusLoading()"
+            class="py-3 rounded-3"
+          >
+            <mat-icon>refresh</mat-icon>
+            Refresh status
+          </button>
+        </div>
+      </form>
+
+      @if (hasStatusCard()) {
+        <hr class="my-3 text-muted border-2 opacity-10" />
+        <div aria-live="polite" aria-label="Data generation status">
+          <div class="pb-2">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h3 class="h5 mb-0 fw-bold d-flex align-items-center">
+                <mat-icon class="me-2 icon-sm">info</mat-icon>
+                Status
+              </h3>
+              <div class="d-flex align-items-center gap-2">
+                @if (isStatusLoading()) {
+                  <mat-spinner diameter="20"></mat-spinner>
+                }
+                <span
+                  class="badge"
+                  [class.bg-primary]="statusState() === 'RUNNING'"
+                  [class.bg-success]="statusState() === 'SUCCEEDED'"
+                  [class.bg-danger]="statusState() === 'FAILED'"
+                  [class.bg-secondary]="statusState() === 'IDLE' || !statusState()"
+                >
+                  {{ statusState() }}
+                </span>
+              </div>
+            </div>
+
+            <p class="mb-2">
+              <strong class="text-muted">Current step:</strong>
+              @if (currentStep()) {
+                <span class="ms-1 fw-medium">{{ currentStep() }}</span>
+              } @else {
+                <span class="ms-1 fst-italic">Not started</span>
+              }
+            </p>
+
+            <p class="mb-3 text-muted">
+              @if (statusMessage()) {
+                {{ statusMessage() }}
+              } @else {
+                Waiting for backend status update...
+              }
+            </p>
+
+            <div class="mb-2">
+              <div class="d-flex justify-content-between mb-1">
+                <small class="fw-medium">Progress</small>
+                <small class="fw-bold">{{ progressLabel() }}</small>
+              </div>
+              <mat-progress-bar
+                mode="determinate"
+                [value]="progress()"
+                color="primary"
+              ></mat-progress-bar>
+            </div>
+
+            @if (statusState() === 'SUCCEEDED') {
+              <div class="alert alert-success mt-3 mb-0 d-flex align-items-center py-2">
+                <mat-icon class="me-2">check_circle</mat-icon>
+                Generation completed successfully.
+              </div>
+            }
+
+            @if (isFailed()) {
+              <div class="alert alert-danger mt-3 mb-0 d-flex align-items-center py-2">
+                <mat-icon class="me-2">error</mat-icon>
+                Generation failed. You can refresh status or retry with a new run.
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

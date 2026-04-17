@@ -1,0 +1,38 @@
+@if (isOpen()) {
+  <div
+    class="modal fade show d-block"
+    tabindex="-1"
+    role="dialog"
+    (click)="onBackdropClick($event)"
+  >
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title" id="successModalTitle">
+            <i class="bi bi-check-circle me-2"></i>
+            {{ title() }}
+          </h5>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            aria-label="Close"
+            (click)="onDismissClick()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-0">{{ message() }}</p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-success"
+            (click)="onButtonClick()"
+          >
+            {{ buttonText() }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show"></div>
+}

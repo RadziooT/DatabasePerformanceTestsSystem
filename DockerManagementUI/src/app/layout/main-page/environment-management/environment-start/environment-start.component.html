@@ -1,0 +1,115 @@
+<div class="container-fluid py-1">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-6">
+      <h2 class="mb-3 d-flex align-items-center">
+        <mat-icon class="me-2 icon-lg">settings</mat-icon>
+        Configuration
+      </h2>
+
+      @if (isLoading() && !isSubmitting()) {
+        <app-loading-spinner [show]="true" [height]="'300px'" />
+      } @else {
+        <form [formGroup]="configForm" (ngSubmit)="onSubmit()" class="d-flex flex-column gap-2">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Database Type</mat-label>
+            <mat-select formControlName="databaseContainerId" required>
+              <mat-option value="">-- None --</mat-option>
+              @for (db of databaseTypes(); track db) {
+                <mat-option [value]="db">{{ db }}</mat-option>
+              }
+            </mat-select>
+            <mat-hint>Choose which database type to run</mat-hint>
+            @if (configForm.get('databaseContainerId')?.hasError('required')) {
+              <mat-error>Please select a database type</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100 mt-1">
+            <mat-label>Volume</mat-label>
+            <mat-select formControlName="volumeId" required>
+              <mat-option value="">-- None --</mat-option>
+              @for (vol of volumeTypes(); track vol) {
+                <mat-option [value]="vol">{{ vol }}</mat-option>
+              }
+            </mat-select>
+            <mat-hint>Choose which volume to mount to the database container</mat-hint>
+            @if (configForm.get('volumeId')?.hasError('required')) {
+              <mat-error>Please select a volume</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-card appearance="outlined" class="mt-3 mb-1 bg-light">
+            <mat-card-content class="d-flex flex-column gap-2 p-3">
+              <h3 class="mb-2 fs-6 fw-bold">Lifecycle Options</h3>
+
+              <mat-checkbox formControlName="shutdownContainers">
+                <span class="d-block">Shutdown all containers before starting</span>
+                <small class="text-muted fw-normal">All running containers will be stopped</small>
+              </mat-checkbox>
+
+              <mat-checkbox formControlName="removeContainers">
+                <span class="d-block">Remove all containers</span>
+                <small class="text-muted fw-normal"
+                  >All containers will be stopped and removed</small
+                >
+              </mat-checkbox>
+
+              <mat-checkbox formControlName="deleteVolumes" color="warn">
+                <span class="d-block text-danger">Delete all volumes</span>
+                <small class="text-muted fw-normal">All volumes will be deleted</small>
+              </mat-checkbox>
+
+              @if (deleteVolumesChecked) {
+                <div class="alert alert-warning mt-3 mb-0" role="alert">
+                  <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                  <strong>Warning:</strong> Deleting volumes will require regenerating new values in
+                  the backend, which may take a significant amount of time.
+                </div>
+              }
+            </mat-card-content>
+          </mat-card>
+
+          <div class="d-grid mt-3">
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              [disabled]="configForm.invalid || isSubmitting()"
+              class="py-3 rounded-3 fs-6"
+            >
+              @if (isSubmitting()) {
+                <mat-spinner diameter="24" class="me-2 d-inline-block align-middle"></mat-spinner>
+                Starting Environment...
+              } @else {
+                <div class="d-flex align-items-center justify-content-center">
+                  <mat-icon class="me-2">play_circle</mat-icon>
+                  Start Environment
+                </div>
+              }
+            </button>
+          </div>
+        </form>
+      }
+    </div>
+  </div>
+</div>
+
+<app-confirmation-modal
+  [isOpen]="showConfirmationModal()"
+  [title]="'Confirm Volume Deletion'"
+  [message]="'Are you sure you want to delete all volumes? This will require regenerating new values in the backend, which may take a significant amount of time.'"
+  [confirmText]="'Yes, Delete Volumes'"
+  [cancelText]="'Cancel'"
+  [confirmButtonClass]="'btn-danger'"
+  (confirmed)="onConfirmSubmit()"
+  (cancelled)="onCancelSubmit()"
+/>
+
+<app-success-modal
+  [isOpen]="showSuccessModal()"
+  [title]="'Environment Started'"
+  [message]="'The environment has been started successfully. Click View Containers to open Docker resources.'"
+  [buttonText]="'View Containers'"
+  (confirmed)="onSuccessModalClose()"
+  (dismissed)="onSuccessModalDismiss()"
+/>

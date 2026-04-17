@@ -1,0 +1,460 @@
+openapi: 3.0.3
+info:
+  title: DockerManager API Endpoints
+  version: "1.0.0"
+  description: OpenAPI definition for testing DockerManager endpoints in Postman.
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+
+tags:
+  - name: Containers
+  - name: Environment Initialization
+  - name: Environment
+  - name: Volumes
+  - name: Performance Tests
+  - name: Data Generation
+
+paths:
+  /api/init:
+    get:
+      tags: [ Environment Initialization ]
+      summary: Get available options for environment configuration (database types, volume sizes, performance test types)
+      operationId: getAvailableEnvironmentOptions
+      responses:
+        "200":
+          description: Available environment configuration options
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EnvironmentOptionsResponse"
+
+  /api/containers:
+    get:
+      tags: [ Containers ]
+      summary: List all containers
+      operationId: getAllContainers
+      responses:
+        "200":
+          description: List of containers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ContainerDto"
+
+  /api/containers/stop:
+    post:
+      tags: [ Containers ]
+      summary: Stop all containers
+      operationId: stopAllContainers
+      responses:
+        "200":
+          description: Containers stopped successfully
+
+  /api/containers/stop/{containerType}:
+    post:
+      tags: [ Containers ]
+      summary: Stop a container
+      operationId: stopContainer
+      parameters:
+        - name: containerType
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ContainerType"
+      responses:
+        "200":
+          description: Container stopped successfully
+
+  /api/containers/delete/{containerType}:
+    delete:
+      tags: [ Containers ]
+      summary: Delete a container
+      operationId: deleteContainer
+      parameters:
+        - name: containerType
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ContainerType"
+      responses:
+        "200":
+          description: Container deleted successfully
+
+  /api/volumes:
+    get:
+      tags: [ Volumes ]
+      summary: List all volumes
+      operationId: getVolumes
+      responses:
+        "200":
+          description: List of volumes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/VolumesDto"
+
+  /api/volumes/delete:
+    delete:
+      tags: [ Volumes ]
+      summary: Delete all volumes
+      operationId: deleteAllVolumes
+      responses:
+        "200":
+          description: All volumes deleted successfully
+
+  /api/volumes/delete/{VolumeType}:
+    delete:
+      tags: [ Volumes ]
+      summary: Delete a specific volume
+      operationId: deleteVolume
+      parameters:
+        - name: VolumeType
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/VolumeType"
+      responses:
+        "200":
+          description: Volume deleted successfully
+
+  /api/environment/start:
+    post:
+      tags: [ Environment ]
+      summary: Initialize environment with selected database settings
+      operationId: startEnvironment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EnvironmentRunRequest"
+            example:
+              databaseType: POSTGRES
+              databaseVolumeType: MEDIUM
+              shutdownContainers: true
+              removeContainers: false
+              deleteVolumes: false
+              cleanupOnFailure: true
+      responses:
+        "200":
+          description: Environment initialized successfully
+
+  /api/performance-tests/previous-runs:
+    get:
+      tags: [ Performance Tests ]
+      summary: List available Gatling test runs (newest first)
+      operationId: getPerformanceTestRuns
+      responses:
+        "200":
+          description: List of available Gatling runs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GatlingRunDto"
+
+  /api/performance-tests/run:
+    post:
+      tags: [ Performance Tests ]
+      summary: Start performance test execution for prepared environment
+      operationId: runPerformanceTests
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PerformanceTestsRunRequest"
+      responses:
+        "200":
+          description: Performance tests started successfully
+
+  /api/data-generation/start:
+    post:
+      tags: [ Data Generation ]
+      summary: Start one-shot data generation job for running database container
+      operationId: startDataGeneration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DataGenerationStartRequest"
+      responses:
+        "202":
+          description: Data generation accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataGenerationStatusResponse"
+        "400":
+          description: Invalid request or prerequisites not met
+        "409":
+          description: Another generation job is already running
+
+  /api/data-generation/status:
+    get:
+      tags: [ Data Generation ]
+      summary: Get latest in-memory data generation status
+      operationId: getDataGenerationStatus
+      responses:
+        "200":
+          description: Current data generation status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataGenerationStatusResponse"
+
+  /api/performance-tests/runs/{runId}/report:
+    get:
+      tags: [ Performance Tests ]
+      summary: Get Gatling report HTML for selected run - done automatically in Iframe
+      operationId: getPerformanceTestReport
+      parameters:
+        - $ref: "#/components/parameters/RunId"
+      responses:
+        "200":
+          description: Report HTML
+          content:
+            text/html:
+              schema:
+                type: string
+
+  /api/performance-tests/runs/{runId}/files/{assetPath}:
+    get:
+      tags: [ Performance Tests ]
+      summary: Get static report asset for selected run - done automatically in Iframe
+      operationId: getPerformanceTestReportAsset
+      parameters:
+        - $ref: "#/components/parameters/RunId"
+        - name: assetPath
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Relative path to report asset file
+      responses:
+        "200":
+          description: Report asset content
+
+components:
+  parameters:
+    RunId:
+      name: runId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Gatling run directory name
+
+  schemas:
+    ContainerDto:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        image:
+          type: string
+        containerType:
+          $ref: "#/components/schemas/ContainerType"
+        state:
+          $ref: "#/components/schemas/ContainerState"
+        volumes:
+          type: array
+          items:
+            type: string
+        availableActions:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContainerActions"
+
+    VolumesDto:
+      type: object
+      properties:
+        name:
+          type: string
+        mountpoint:
+          type: string
+        volumeType:
+          $ref: "#/components/schemas/VolumeType"
+        status:
+          $ref: "#/components/schemas/VolumeStatus"
+
+    EnvironmentRunRequest:
+      type: object
+      properties:
+        databaseType:
+          $ref: "#/components/schemas/DatabaseType"
+        databaseVolumeType:
+          $ref: "#/components/schemas/DatabaseVolumeType"
+        shutdownContainers:
+          type: boolean
+        removeContainers:
+          type: boolean
+        deleteVolumes:
+          type: boolean
+      required:
+        - databaseType
+        - databaseVolumeType
+        - shutdownContainers
+        - removeContainers
+        - deleteVolumes
+
+    EnvironmentOptionsResponse:
+      type: object
+      properties:
+        databaseTypes:
+          type: array
+          items:
+            $ref: "#/components/schemas/DatabaseType"
+          description: Available database types
+        volumeTypes:
+          type: array
+          items:
+            $ref: "#/components/schemas/DatabaseVolumeType"
+          description: Available volume sizes
+        performanceTestTypes:
+          type: array
+          items:
+            $ref: "#/components/schemas/PerformanceTestSimulationType"
+          description: Available performance test simulation types
+
+    PerformanceTestsRunRequest:
+      type: object
+      properties:
+        databaseType:
+          $ref: "#/components/schemas/DatabaseType"
+        simulationType:
+          $ref: "#/components/schemas/PerformanceTestSimulationType"
+        volumeSize:
+          $ref: "#/components/schemas/DatabaseVolumeType"
+      required:
+        - databaseType
+        - simulationType
+        - volumeSize
+
+    DataGenerationStartRequest:
+      type: object
+      properties:
+        databaseType:
+          $ref: "#/components/schemas/DatabaseType"
+        volumeType:
+          $ref: "#/components/schemas/DatabaseVolumeType"
+      required:
+        - databaseType
+        - volumeType
+
+    DataGenerationStatusResponse:
+      type: object
+      properties:
+        state:
+          $ref: "#/components/schemas/DataGenerationState"
+        progressPercent:
+          type: integer
+          minimum: 0
+          maximum: 100
+        currentStep:
+          type: string
+        startedAt:
+          type: string
+          format: date-time
+        finishedAt:
+          type: string
+          format: date-time
+
+    VolumeType:
+      type: string
+      enum:
+        - POSTGRES_SMALL
+        - POSTGRES_MEDIUM
+        - POSTGRES_LARGE
+        - MYSQL_SMALL
+        - MYSQL_MEDIUM
+        - MYSQL_LARGE
+        - SQLSERVER_SMALL
+        - SQLSERVER_MEDIUM
+        - SQLSERVER_LARGE
+        - ORACLE_SMALL
+        - ORACLE_MEDIUM
+        - ORACLE_LARGE
+        - GATLING
+
+    VolumeStatus:
+      type: string
+      enum:
+        - CREATED
+        - NOT_CREATED
+
+    ContainerState:
+      type: string
+      enum:
+        - CREATED
+        - RESTARTING
+        - RUNNING
+        - REMOVING
+        - PAUSED
+        - EXITED
+        - DEAD
+        - STOPPED
+        - NOT_CREATED
+        - UNKNOWN
+
+    ContainerActions:
+      type: string
+      enum:
+        - STOP
+        - DELETE
+
+    DatabaseType:
+      type: string
+      enum:
+        - MYSQL
+        - POSTGRES
+        - ORACLE
+        - SQLSERVER
+
+    DatabaseVolumeType:
+      type: string
+      enum:
+        - SMALL
+        - MEDIUM
+        - LARGE
+
+    GatlingRunDto:
+      type: object
+      properties:
+        runId:
+          type: string
+        startedAt:
+          type: string
+          format: date-time
+
+    PerformanceTestSimulationType:
+      type: string
+      enum:
+        - BASIC_SIMULATION
+
+    DataGenerationState:
+      type: string
+      enum:
+        - IDLE
+        - RUNNING
+        - SUCCEEDED
+        - FAILED
+
+    ContainerType:
+      type: string
+      enum:
+        - POSTGRES
+        - MYSQL
+        - ORACLE
+        - SQLSERVER
+        - MOCK_APP
+        - GATLING

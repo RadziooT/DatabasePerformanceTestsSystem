@@ -1,0 +1,14 @@
+.sidebar {
+  width: 280px;
+}
+
+.toggle-sidebar-button {
+  top: 1rem;
+  left: 1rem;
+  z-index: 100;
+  background: white;
+}
+
+.main-content {
+  overflow-y: auto;
+}

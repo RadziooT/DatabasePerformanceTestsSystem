@@ -1,0 +1,52 @@
+<section class="container-fluid py-4" aria-labelledby="performance-tests-title">
+  <div class="row justify-content-center">
+    <div class="col-12 col-xxl-11">
+
+      <header class="mb-3 text-center">
+        <h1 id="performance-tests-title" class="h2 mb-1">Performance Tests</h1>
+        <p class="text-muted mb-0">Run performance tests and inspect available runs.</p>
+      </header>
+
+      <div class="resources-container mx-auto">
+        <div class="bg-white mat-elevation-z4 rounded">
+          <mat-tab-group animationDuration="0ms">
+            <mat-tab label="Run Tests">
+              <div class="p-2">
+                <app-run-tests
+                  [simulationTypes]="simulationTypes()"
+                  [selectedSimulationType]="selectedSimulationType()"
+                  [runLoading]="runLoading()"
+                  [canStart]="canStart()"
+                  [environmentNotStarted]="environmentNotStarted()"
+                  [simulationOptionsUnavailable]="simulationOptionsUnavailable()"
+                  [runError]="runError()"
+                  (simulationTypeSelected)="onSimulationTypeSelected($event)"
+                  (runTestsClicked)="runPerformanceTests()"
+                ></app-run-tests>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Previous Runs">
+              <div class="p-2">
+                <app-previous-runs
+                  [runsLoading]="runsLoading()"
+                  [runs]="runs()"
+                  [selectedRunId]="selectedRunId()"
+                  [runsError]="runsError()"
+                  [reportLoading]="reportLoading()"
+                  [reportError]="reportError()"
+                  [reportUrl]="reportUrl()"
+                  [runLoading]="runLoading()"
+                  (runSelected)="onRunSelected($event)"
+                  (refreshClicked)="loadRuns()"
+                  (reportLoaded)="onReportLoaded()"
+                  (reportLoadFailed)="onReportLoadFailed()"
+                ></app-previous-runs>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

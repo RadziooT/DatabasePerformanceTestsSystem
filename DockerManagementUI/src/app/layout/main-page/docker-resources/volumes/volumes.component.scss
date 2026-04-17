@@ -1,0 +1,37 @@
+.table-responsive {
+  padding: 0;
+}
+
+.table-container {
+  overflow: hidden;
+  background-color: white;
+}
+
+.actions {
+  white-space: nowrap;
+
+  button {
+    min-width: 36px;
+  }
+}
+
+.action-loading-placeholder {
+  min-width: 36px;
+  min-height: 40px;
+}
+
+.table-loading-placeholder {
+  min-height: 72px;
+}
+
+.id-cell {
+  cursor: help;
+  background-color: #f1f3f5;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+table.mat-table {
+  width: 100%;
+  background: transparent;
+}
