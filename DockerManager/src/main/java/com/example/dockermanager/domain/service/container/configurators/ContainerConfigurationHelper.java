@@ -62,7 +62,7 @@ public class ContainerConfigurationHelper {
 
     public List<Mount> buildMounts(ContainerDefinition definition,
                                    String dynamicVolumeName,
-                                   Optional<String> dynamicMountTarget,
+                                   String dynamicMountTarget,
                                    String containerTypeName) {
         Map<String, Mount> mountsByTarget = new LinkedHashMap<>();
         boolean hasDynamicVolume = dynamicVolumeName != null && !dynamicVolumeName.isBlank();
@@ -79,10 +79,12 @@ public class ContainerConfigurationHelper {
         }
 
         if (hasDynamicVolume) {
-            String target = dynamicMountTarget.orElseThrow(() -> new IllegalStateException(
-                    "Container type " + containerTypeName + " does not support dynamic data volume"
-            ));
-            mountsByTarget.put(target, volumeMount(dynamicVolumeName, target));
+            if (Objects.isNull(dynamicMountTarget)) {
+                throw new IllegalStateException(
+                        "Container type " + containerTypeName + " does not support dynamic data volume"
+                );
+            }
+            mountsByTarget.put(dynamicMountTarget, volumeMount(dynamicVolumeName, dynamicMountTarget));
         }
 
         return new ArrayList<>(mountsByTarget.values());

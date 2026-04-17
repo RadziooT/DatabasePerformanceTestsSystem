@@ -89,15 +89,15 @@ public class DataGeneratorContainerConfigurationService extends ContainerConfigu
             throw new IllegalStateException("Missing port mapping for " + containerType);
         }
 
-        String[] parts = ports.get(0).split(":");
+        String[] parts = ports.getFirst().split(":");
         if (parts.length != 2) {
-            throw new IllegalStateException("Invalid port mapping for " + containerType + ": " + ports.get(0));
+            throw new IllegalStateException("Invalid port mapping for " + containerType + ": " + ports.getFirst());
         }
 
         try {
             return Integer.parseInt(parts[1].trim());
         } catch (NumberFormatException ex) {
-            throw new IllegalStateException("Invalid container port for " + containerType + ": " + ports.get(0), ex);
+            throw new IllegalStateException("Invalid container port for " + containerType + ": " + ports.getFirst(), ex);
         }
     }
 }

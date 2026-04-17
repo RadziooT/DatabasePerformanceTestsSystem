@@ -199,7 +199,7 @@ public class ContainerService {
             }
 
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 throw new RuntimeException("Interrupted while waiting for container readiness: " + containerType.getContainerName(), e);
@@ -260,9 +260,8 @@ public class ContainerService {
     }
 
     public void removeAllContainers() {
-        findManagedContainers().forEach(container -> {
-            dockerClient.removeContainerCmd(container.getId()).withForce(true).exec();
-        });
+        findManagedContainers().forEach(container -> dockerClient.removeContainerCmd(container.getId())
+                .withForce(true).exec());
     }
 
     private ContainerSummary mapPresentContainerInfo(Container containerApiData) {
