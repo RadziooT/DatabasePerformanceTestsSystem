@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: data-generator
+
+logging:
+  level:
+    org.example.datagenerator: DEBUG
+    org.springframework.jdbc: INFO
+
+generator:
+  job-id: ${GENERATOR_JOB_ID:unknown}
+  db-type: ${GENERATOR_DB_TYPE:POSTGRES}
+  volume-type: ${GENERATOR_VOLUME_TYPE:SMALL}
+  db-network-name: ${GENERATOR_DB_NETWORK_NAME}
+  db-port: ${GENERATOR_DB_PORT}
+  db-name: ${GENERATOR_DB_NAME:testdb}
+  db-user: ${GENERATOR_DB_USER:user}
+  db-password: ${GENERATOR_DB_PASSWORD:password}
+  # In container setups, localhost points to the generator container itself.
+  callback-url: ${GENERATOR_CALLBACK_URL:http://host.docker.internal:8000/api/data-generation/callback}
+  callback-token: ${GENERATOR_CALLBACK_TOKEN:dev-token}
+  batch-size: ${GENERATOR_BATCH_SIZE:2000}
+
+  pool-minimum-idle: ${GENERATOR_POOL_MIN_IDLE:2}
+  pool-maximum-size: ${GENERATOR_POOL_MAX_SIZE:8}
+  pool-connection-timeout-ms: ${GENERATOR_POOL_CONNECTION_TIMEOUT_MS:30000}
+  pool-idle-timeout-ms: ${GENERATOR_POOL_IDLE_TIMEOUT_MS:600000}
+  pool-max-lifetime-ms: ${GENERATOR_POOL_MAX_LIFETIME_MS:1800000}
