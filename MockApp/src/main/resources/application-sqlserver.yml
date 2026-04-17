@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:sqlserver://${DB_HOST:sqlserver}:${DB_PORT:1433};databaseName=${DB_NAME:mockapp};encrypt=false
+    username: ${DB_USERNAME:mockapp}
+    password: ${DB_PASSWORD:mockapp}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.SQLServerDialect

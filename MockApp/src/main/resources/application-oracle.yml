@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@//${DB_HOST:oracle-free}:${DB_PORT:1521}/${DB_NAME:FREEPDB1}
+    driver-class-name: oracle.jdbc.OracleDriver
+    username: ${DB_USERNAME:mockapp}
+    password: ${DB_PASSWORD:mockapp}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.OracleDialect

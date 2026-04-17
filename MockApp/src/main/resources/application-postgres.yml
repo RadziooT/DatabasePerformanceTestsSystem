@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/${DB_NAME:mockapp}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME:mockapp}
+    password: ${DB_PASSWORD:mockapp}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
