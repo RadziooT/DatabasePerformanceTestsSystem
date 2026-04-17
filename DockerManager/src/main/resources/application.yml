@@ -1,0 +1,29 @@
+spring:
+  config:
+    import:
+      - "classpath:config/containers/mysql.yml"
+      - "classpath:config/containers/postgres.yml"
+      - "classpath:config/containers/oracle.yml"
+      - "classpath:config/containers/sqlserver.yml"
+      - "classpath:config/containers/mock-app.yml"
+      - "classpath:config/containers/data-generator.yml"
+      - "classpath:config/containers/gatling.yml"
+
+server:
+  port: 8000
+
+# Shared settings consumed by split container definitions.
+docker:
+  shared-db:
+    username: ${DOCKER_MANAGER_DB_USERNAME}
+    password: ${DOCKER_MANAGER_DB_PASSWORD}
+    name: ${DOCKER_MANAGER_DB_NAME}
+  performance-tests:
+    base-url: ${PERFORMANCE_TESTS_BASE_URL:http://host.docker.internal:8080}
+
+performance-tests:
+  results-directory: ${GATLING_RESULTS_DIR:./target/gatling}
+
+data-generation:
+  callback-url: ${DATA_GENERATION_CALLBACK_URL:http://host.docker.internal:8000/api/data-generation/callback}
+  callback-token: ${DATA_GENERATION_CALLBACK_TOKEN:docker-manager-dev-token}

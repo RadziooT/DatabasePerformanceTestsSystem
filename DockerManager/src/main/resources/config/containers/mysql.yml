@@ -1,0 +1,17 @@
+docker:
+  containers:
+    MYSQL:
+      image: "mysql:8.3.0"
+      ports:
+        - "13306:3306"
+      containerName: "docker-manager-mysql"
+      environment:
+        MYSQL_USER: "${docker.shared-db.username}"
+        MYSQL_PASSWORD: "${docker.shared-db.password}"
+        MYSQL_ROOT_PASSWORD: "${docker.shared-db.password}"
+        MYSQL_DATABASE: "${docker.shared-db.name}"
+      labels:
+        app: "docker-manager"
+        service: "mysql"
+      volumes:
+        - "mysql-data:/var/lib/mysql"

@@ -1,0 +1,16 @@
+docker:
+  containers:
+    POSTGRES:
+      image: "postgres:16.2-alpine"
+      ports:
+        - "15432:5432"
+      containerName: "docker-manager-postgres"
+      environment:
+        POSTGRES_USER: "${docker.shared-db.username}"
+        POSTGRES_PASSWORD: "${docker.shared-db.password}"
+        POSTGRES_DB: "${docker.shared-db.name}"
+      labels:
+        app: "docker-manager"
+        service: "postgres"
+      volumes:
+        - "postgres-data:/var/lib/postgresql/data"

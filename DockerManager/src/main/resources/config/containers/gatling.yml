@@ -1,0 +1,13 @@
+docker:
+  containers:
+    GATLING:
+      image: "docker-manager-performance-tests"
+      environment:
+        SIMULATION_CLASS: "example.BasicSimulation"
+        BASE_URL: "${docker.performance-tests.base-url}"
+      containerName: "docker-manager-performance-tests"
+      labels:
+        app: "docker-manager"
+        service: "gatling"
+      volumes:
+        - "gatling-results-local:/app/target/gatling"

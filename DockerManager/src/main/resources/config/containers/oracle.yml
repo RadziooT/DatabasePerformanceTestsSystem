@@ -1,0 +1,17 @@
+docker:
+  containers:
+    ORACLE:
+      image: "gvenzl/oracle-free:latest"
+      ports:
+        - "1521:1521"
+      containerName: "docker-manager-oracle"
+      environment:
+        ORACLE_PASSWORD: "${docker.shared-db.password}"
+        ORACLE_DATABASE: "${docker.shared-db.name}"
+        APP_USER: "${docker.shared-db.username}"
+        APP_USER_PASSWORD: "${docker.shared-db.password}"
+      labels:
+        app: "docker-manager"
+        service: "oracle"
+      volumes:
+        - "oracle-data:/opt/oracle/oradata"

@@ -1,0 +1,19 @@
+docker:
+  containers:
+    SQLSERVER:
+      image: "mcr.microsoft.com/mssql/server:2022-latest"
+      ports:
+        - "1433:1433"
+      containerName: "docker-manager-sqlserver"
+      environment:
+        ACCEPT_EULA: "Y"
+        MSSQL_PID: "Developer"
+        SQLSERVER_USER: "${docker.shared-db.username}"
+        MSSQL_SA_PASSWORD: "${docker.shared-db.password}"
+        SA_PASSWORD: "${docker.shared-db.password}"
+        MSSQL_DB: "${docker.shared-db.name}"
+      labels:
+        app: "docker-manager"
+        service: "sqlserver"
+      volumes:
+        - "sqlserver-data:/var/opt/mssql"

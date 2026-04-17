@@ -1,0 +1,13 @@
+docker:
+  containers:
+    MOCK_APP:
+      image: "docker-manager-mock-app"
+      ports:
+        - "8080:8080"
+      containerName: "docker-manager-mock-app"
+      environment:
+        SPRING_PROFILES_ACTIVE: "dev"
+      labels:
+        app: "docker-manager"
+        service: "mockapp"
+      volumes: [ ]

@@ -1,0 +1,8 @@
+docker:
+  containers:
+    DATA_GENERATOR:
+      image: "docker-manager-data-generator"
+      containerName: "docker-manager-data-generator"
+      labels:
+        app: "docker-manager"
+        service: "data-generator"

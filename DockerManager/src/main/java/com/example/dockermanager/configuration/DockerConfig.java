@@ -1,0 +1,34 @@
+package com.example.dockermanager.configuration;
+
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.core.DefaultDockerClientConfig;
+import com.github.dockerjava.core.DockerClientConfig;
+import com.github.dockerjava.core.DockerClientImpl;
+import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
+import com.github.dockerjava.transport.DockerHttpClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.net.URI;
+
+@Configuration
+public class DockerConfig {
+
+    @Bean
+    public DockerClient dockerClient() {
+        String dockerHost = System.getenv("DOCKER_HOST");
+        if (dockerHost == null) {
+            throw new IllegalStateException("DOCKER_HOST is not set");
+        }
+
+        DockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
+                .withDockerHost(dockerHost)
+                .build();
+
+        DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
+                .dockerHost(URI.create(dockerHost))
+                .build();
+
+        return DockerClientImpl.getInstance(config, httpClient);
+    }
+}
