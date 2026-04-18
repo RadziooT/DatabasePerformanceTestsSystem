@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "serve:static": "npx http-server ./dist/DockerManagementUI/browser -p 4200 -a 0.0.0.0 -c-1",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "generate:api": "openapi-generator-cli generate",
