@@ -1,9 +1,9 @@
 package example.utils;
 
 public enum DatasetSize {
-    SMALL(2),
-    MEDIUM(5),
-    LARGE(10);
+    SMALL(10),
+    MEDIUM(25),
+    LARGE(50);
 
     private final int warehouses;
 

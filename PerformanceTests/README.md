@@ -5,6 +5,21 @@
 `PerformanceTests` is a Gatling-based project used to run performance test sequences for database response time comparison.
 The project is designed to be built and executed as a container image.
 
+## Methodology
+
+The TPC-C workloads in this project now follow the strict benchmark key ranges and transaction rules used by the seeded `MockApp` data:
+
+* Warehouse IDs are selected from `1..W`, where `W` comes from the selected dataset size.
+* District IDs are always `1..10` within the selected warehouse.
+* Customer IDs are always `1..3000` within the selected warehouse/district.
+* Item IDs are always `1..100000` for normal `New-Order` traffic.
+* Customer last names are derived deterministically from the fixed 10-syllable TPC-C name set so name-based lookups resolve against seeded data.
+* `Payment` and `Order-Status` use a 60/40 split between last-name and customer-id lookups.
+* `Payment` also keeps the TPC-C-style 85/15 home-vs-remote customer selection.
+* `New-Order` uses 5-15 order lines and includes a 1% invalid-item branch that is expected to roll back and return `404`.
+* `Delivery` uses all 10 districts of the chosen warehouse.
+* `Stock-Level` uses a threshold of `10..20` and a fixed recent-order window of `20`.
+
 ## Build the container image
 
 Build the image from the project root:

@@ -175,7 +175,7 @@ public class TpccTransactionService {
     public PaymentResponse payment(PaymentRequest request) {
         validatePaymentRequest(request);
 
-        Customer customer = resolveCustomer(request.getCustomerId(), request.getCustomerDistrictId(), request.getCustomerLastName(), request.getDistrictId(), request.getWarehouseId());
+        Customer customer = resolveCustomer(request.getCustomerId(), request.getCustomerWarehouseId(), request.getCustomerDistrictId(), request.getCustomerLastName(), request.getDistrictId(), request.getWarehouseId());
         District customerDistrict = districtService.getById(customer.getWarehouseId(), customer.getDistrictId());
         if (request.getCustomerWarehouseId() != null && !Objects.equals(customerDistrict.getWarehouseId(), request.getCustomerWarehouseId())) {
             throw new IllegalArgumentException("Customer warehouse does not match the customer district");
@@ -219,7 +219,7 @@ public class TpccTransactionService {
     public OrderStatusResponse orderStatus(OrderStatusRequest request) {
         validateOrderStatusRequest(request);
 
-        Customer customer = resolveCustomer(request.getCustomerId(), request.getCustomerDistrictId(), request.getCustomerLastName(), request.getDistrictId(), request.getWarehouseId());
+        Customer customer = resolveCustomer(request.getCustomerId(), request.getCustomerWarehouseId(), request.getCustomerDistrictId(), request.getCustomerLastName(), request.getDistrictId(), request.getWarehouseId());
         District customerDistrict = districtService.getById(customer.getWarehouseId(), customer.getDistrictId());
         List<Order> customerOrders = orderService.getByCustomerId(customer.getWarehouseId(), customer.getDistrictId(), customer.getId());
 
@@ -403,17 +403,18 @@ public class TpccTransactionService {
         }
     }
 
-    private Customer resolveCustomer(Long customerId, Long customerDistrictId, String customerLastName, Long fallbackDistrictId, Long warehouseId) {
+    private Customer resolveCustomer(Long customerId, Long customerWarehouseId, Long customerDistrictId, String customerLastName, Long fallbackDistrictId, Long fallbackWarehouseId) {
+        Long warehouseIdToUse = customerWarehouseId != null ? customerWarehouseId : fallbackWarehouseId;
+        Long districtIdToUse = customerDistrictId != null ? customerDistrictId : fallbackDistrictId;
+
         if (customerId != null) {
-            Long districtIdToUse = customerDistrictId != null ? customerDistrictId : fallbackDistrictId;
-            if (districtIdToUse == null) {
+            if (warehouseIdToUse == null || districtIdToUse == null) {
                 throw new IllegalArgumentException("districtId must be provided when resolving customer by id");
             }
-            return customerService.getById(warehouseId, districtIdToUse, customerId);
+            return customerService.getById(warehouseIdToUse, districtIdToUse, customerId);
         }
-        Long districtIdToUse = customerDistrictId != null ? customerDistrictId : fallbackDistrictId;
-        if (districtIdToUse != null && customerLastName != null) {
-            return customerService.getByDistrictAndLastName(warehouseId, districtIdToUse, customerLastName);
+        if (warehouseIdToUse != null && districtIdToUse != null && customerLastName != null) {
+            return customerService.getByDistrictAndLastName(warehouseIdToUse, districtIdToUse, customerLastName);
         }
         throw new IllegalArgumentException("Unable to resolve customer from the provided payment/order-status request");
     }

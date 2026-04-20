@@ -34,6 +34,10 @@ public abstract class AbstractDataGenerationStrategy implements DataGenerationSt
     protected static final int ORDER_LINES_PER_DISTRICT = ORDER_PER_DISTRICT * ORDER_LINES_PER_ORDER;
     protected static final long MIN_BULK_CHUNK_ROWS = 50_000L;
     protected static final long MAX_BULK_CHUNK_ROWS = 1_000_000L;
+    private static final String[] CUSTOMER_LAST_NAME_SYLLABLES = {
+            "BAR", "OUGHT", "ABLE", "PRI", "PRES",
+            "ESE", "ANTI", "CALLY", "ATION", "EING"
+    };
     private static final ProgressRange ITEM_RANGE = new ProgressRange(5, 6);
     private static final ProgressRange WAREHOUSE_RANGE = new ProgressRange(6, 7);
     private static final ProgressRange DISTRICT_RANGE = new ProgressRange(7, 8);
@@ -154,7 +158,7 @@ public abstract class AbstractDataGenerationStrategy implements DataGenerationSt
             for (int w = 1; w <= numWarehouses; w++) {
                 for (int d = 1; d <= DISTRICT_COUNT; d++) {
                     for (int c = 1; c <= CUSTOMER_PER_DISTRICT; c++) {
-                        session.writeRow(tsvRow(c, d, w, "First" + c, "OE", "Last" + c, "Street1-C" + c, "Street2-C" + c, "City", "ST", "123456789", "5551234567890123", since, "GC", BigDecimal.valueOf(50_000.00), BigDecimal.valueOf(0.05), BigDecimal.valueOf(-10.00), BigDecimal.valueOf(10.00), 1, 0, "Customer data " + c));
+                        session.writeRow(tsvRow(c, d, w, "First" + c, "OE", customerLastNameFor(c), "Street1-C" + c, "Street2-C" + c, "City", "ST", "123456789", "5551234567890123", since, "GC", BigDecimal.valueOf(50_000.00), BigDecimal.valueOf(0.05), BigDecimal.valueOf(-10.00), BigDecimal.valueOf(10.00), 1, 0, "Customer data " + c));
                     }
                 }
             }
@@ -274,6 +278,13 @@ public abstract class AbstractDataGenerationStrategy implements DataGenerationSt
 
     private String historyData(int customerId) {
         return "History-" + customerId;
+    }
+
+    private String customerLastNameFor(int customerId) {
+        int nameNumber = Math.floorMod(customerId - 1, 1000);
+        return CUSTOMER_LAST_NAME_SYLLABLES[nameNumber / 100]
+                + CUSTOMER_LAST_NAME_SYLLABLES[(nameNumber / 10) % 10]
+                + CUSTOMER_LAST_NAME_SYLLABLES[nameNumber % 10];
     }
 
     private int calculateWarehouseCount(VolumeSize volumeType) {
