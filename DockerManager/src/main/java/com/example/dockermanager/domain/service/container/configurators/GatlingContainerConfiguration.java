@@ -40,9 +40,9 @@ public class GatlingContainerConfiguration extends ContainerConfiguration {
     @Override
     protected void applyCustomHostConfig(HostConfig hostConfig) {
         hostConfig
+                .withAutoRemove(true)
                 .withMemory(1_073_741_824L)
                 .withCpuCount(2L)
-                .withAutoRemove(false)
                 .withRestartPolicy(RestartPolicy.noRestart());
     }
 

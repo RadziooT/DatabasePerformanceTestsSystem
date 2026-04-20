@@ -88,4 +88,18 @@ public class CustomerService {
         CustomerEntity saved = customerRepository.save(existingCustomer);
         return mapper.toDomain(saved);
     }
+
+    public Customer addDeliveryAndApplyOrderAmount(Long warehouseId, Long districtId, Long id, BigDecimal orderAmount) {
+        CustomerEntity existingCustomer = customerRepository.findByWarehouseIdAndDistrictIdAndId(warehouseId, districtId, id)
+                .orElseThrow(() -> new NotFoundException("Customer not found with warehouseId=" + warehouseId + ", districtId=" + districtId + " and id=" + id));
+
+        BigDecimal currentBalance = existingCustomer.getBalance() != null ? existingCustomer.getBalance() : BigDecimal.ZERO;
+        Integer currentDeliveryCount = existingCustomer.getDeliveryCount() != null ? existingCustomer.getDeliveryCount() : 0;
+
+        existingCustomer.setBalance(currentBalance.add(orderAmount));
+        existingCustomer.setDeliveryCount(currentDeliveryCount + 1);
+
+        CustomerEntity saved = customerRepository.save(existingCustomer);
+        return mapper.toDomain(saved);
+    }
 }

@@ -20,6 +20,8 @@ ENV DATABASE_TYPE=NOT_SET
 CMD ["sh", "-c", "\
 SIMULATION_NAME=${SIMULATION_CLASS##*.}; \
 OUTPUT_BASE=${SIMULATION_NAME}-${DATABASE_TYPE}-${DATASET_SIZE}; \
+RUN_ID=$(cat /proc/sys/kernel/random/uuid); \
+OUTPUT_DIR=${OUTPUT_BASE}-${RUN_ID}; \
 echo \"Using OUTPUT_BASE=$OUTPUT_BASE\"; \
 mvn -B test-compile gatling:test \
   -Dgatling.simulationClass=${SIMULATION_CLASS} \
@@ -27,6 +29,6 @@ mvn -B test-compile gatling:test \
   -DdatasetSize=${DATASET_SIZE} \
   -DdatabaseType=${DATABASE_TYPE}; \
 LATEST=$(ls -td target/gatling/* | head -1); \
-mv \"$LATEST\" \"target/gatling/${OUTPUT_BASE}\"; \
-echo \"Renamed $LATEST -> target/gatling/${OUTPUT_BASE}\" \
+mv \"$LATEST\" \"target/gatling/${OUTPUT_DIR}\"; \
+echo \"Renamed $LATEST -> target/gatling/${OUTPUT_DIR}\" \
 "]

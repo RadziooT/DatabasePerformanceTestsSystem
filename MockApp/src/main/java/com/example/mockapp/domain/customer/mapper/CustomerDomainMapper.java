@@ -22,7 +22,13 @@ public class CustomerDomainMapper implements DomainPersistenceMapper<Customer, C
                     .firstName(customer.getFirstName())
                     .lastName(customer.getLastName())
                     .balance(customer.getBalance())
-                    .paymentCount(customer.getPaymentCount());
+                    .yearToDatePayment(customer.getYearToDatePayment())
+                    .paymentCount(customer.getPaymentCount())
+                    .deliveryCount(customer.getDeliveryCount())
+                    .credit(customer.getCredit())
+                    .creditLimit(customer.getCreditLimit())
+                    .discount(customer.getDiscount())
+                    .data(customer.getData());
         }
         if (district != null) {
             builder.warehouseId(district.getWarehouseId());
@@ -49,7 +55,13 @@ public class CustomerDomainMapper implements DomainPersistenceMapper<Customer, C
                 .firstName(entity.getFirstName())
                 .lastName(entity.getLastName())
                 .balance(entity.getBalance())
+                .yearToDatePayment(entity.getYearToDatePayment())
                 .paymentCount(entity.getPaymentCount())
+                .deliveryCount(entity.getDeliveryCount())
+                .credit(entity.getCredit())
+                .creditLimit(entity.getCreditLimit())
+                .discount(entity.getDiscount())
+                .data(entity.getData())
                 .build();
     }
 }

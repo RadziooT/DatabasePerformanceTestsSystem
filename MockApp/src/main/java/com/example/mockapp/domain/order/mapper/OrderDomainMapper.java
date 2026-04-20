@@ -2,18 +2,18 @@ package com.example.mockapp.domain.order.mapper;
 
 import com.example.mockapp.domain.DomainPersistenceMapper;
 import com.example.mockapp.domain.order.model.Order;
-import com.example.mockapp.persistence.order.entity.OrderEntity;
+import com.example.mockapp.persistence.order.entity.OrdersEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OrderDomainMapper implements DomainPersistenceMapper<Order, OrderEntity> {
+public class OrderDomainMapper implements DomainPersistenceMapper<Order, OrdersEntity> {
 
     @Override
-    public OrderEntity toEntity(Order order) {
+    public OrdersEntity toEntity(Order order) {
         if (order == null) {
             return null;
         }
-        return OrderEntity.builder()
+        return OrdersEntity.builder()
                 .id(order.getId())
                 .warehouseId(order.getWarehouseId())
                 .districtId(order.getDistrictId())
@@ -26,7 +26,7 @@ public class OrderDomainMapper implements DomainPersistenceMapper<Order, OrderEn
     }
 
     @Override
-    public Order toDomain(OrderEntity entity) {
+    public Order toDomain(OrdersEntity entity) {
         if (entity == null) {
             return null;
         }

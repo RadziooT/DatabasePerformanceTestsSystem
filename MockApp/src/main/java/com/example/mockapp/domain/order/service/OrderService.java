@@ -3,11 +3,11 @@ package com.example.mockapp.domain.order.service;
 import com.example.mockapp.common.exception.NotFoundException;
 import com.example.mockapp.domain.order.mapper.OrderDomainMapper;
 import com.example.mockapp.domain.order.model.Order;
-import com.example.mockapp.persistence.customer.entity.CustomerEntity;
 import com.example.mockapp.persistence.customer.CustomerRepository;
+import com.example.mockapp.persistence.customer.entity.CustomerEntity;
 import com.example.mockapp.persistence.district.entity.DistrictEntity;
-import com.example.mockapp.persistence.order.entity.OrderEntity;
-import com.example.mockapp.persistence.order.OrderRepository;
+import com.example.mockapp.persistence.order.OrdersRepository;
+import com.example.mockapp.persistence.order.entity.OrdersEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +18,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderService {
 
-    private final OrderRepository orderRepository;
+    private final OrdersRepository ordersRepository;
     private final OrderDomainMapper mapper;
     private final CustomerRepository customerRepository;
 
     public Order create(Order order) {
-        OrderEntity entity = mapper.toEntity(order);
+        OrdersEntity entity = mapper.toEntity(order);
 
         if (entity.getCustomerId() == null) {
             throw new IllegalArgumentException("customerId must not be null when creating an order");
@@ -50,30 +50,30 @@ public class OrderService {
             entity.setAllLocal(1);
         }
 
-        OrderEntity saved = orderRepository.save(entity);
+        OrdersEntity saved = ordersRepository.save(entity);
         return mapper.toDomain(saved);
     }
 
     public Order getById(Long warehouseId, Long districtId, Long id) {
-        OrderEntity entity = orderRepository.findByWarehouseIdAndDistrictIdAndId(warehouseId, districtId, id)
+        OrdersEntity entity = ordersRepository.findByWarehouseIdAndDistrictIdAndId(warehouseId, districtId, id)
                 .orElseThrow(() -> new NotFoundException("Order not found with warehouseId=" + warehouseId + ", districtId=" + districtId + " and id=" + id));
         return mapper.toDomain(entity);
     }
 
     public List<Order> getByCustomerId(Long warehouseId, Long districtId, Long customerId) {
-        return orderRepository.findByWarehouseIdAndDistrictIdAndCustomerId(warehouseId, districtId, customerId).stream()
+        return ordersRepository.findByWarehouseIdAndDistrictIdAndCustomerId(warehouseId, districtId, customerId).stream()
                 .map(mapper::toDomain)
                 .toList();
     }
 
     public List<Order> getByWarehouseAndDistrict(Long warehouseId, Long districtId) {
-        return orderRepository.findByWarehouseIdAndDistrictId(warehouseId, districtId).stream()
+        return ordersRepository.findByWarehouseIdAndDistrictId(warehouseId, districtId).stream()
                 .map(mapper::toDomain)
                 .toList();
     }
 
     public Order update(Long warehouseId, Long districtId, Long id, Order updated) {
-        OrderEntity existing = orderRepository.findByWarehouseIdAndDistrictIdAndId(warehouseId, districtId, id)
+        OrdersEntity existing = ordersRepository.findByWarehouseIdAndDistrictIdAndId(warehouseId, districtId, id)
                 .orElseThrow(() -> new NotFoundException("Order not found with warehouseId=" + warehouseId + ", districtId=" + districtId + " and id=" + id));
 
         existing.setWarehouseId(updated.getWarehouseId());
@@ -86,7 +86,7 @@ public class OrderService {
         existing.setOrderLineCount(updated.getOrderLineCount());
         existing.setAllLocal(updated.getAllLocal() != null && !updated.getAllLocal() ? 0 : 1);
 
-        OrderEntity saved = orderRepository.save(existing);
+        OrdersEntity saved = ordersRepository.save(existing);
         return mapper.toDomain(saved);
     }
 }

@@ -18,7 +18,12 @@ public class Customer {
     private Long districtId;
     private String firstName;
     private String lastName;
-    private String email;
     private BigDecimal balance;
+    private BigDecimal yearToDatePayment;
     private Integer paymentCount;
+    private Integer deliveryCount;
+    private String credit;
+    private BigDecimal creditLimit;
+    private BigDecimal discount;
+    private String data;
 }

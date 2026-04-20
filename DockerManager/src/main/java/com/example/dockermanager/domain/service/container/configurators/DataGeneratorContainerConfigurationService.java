@@ -58,7 +58,7 @@ public class DataGeneratorContainerConfigurationService extends ContainerConfigu
     @Override
     protected void applyCustomHostConfig(HostConfig hostConfig) {
         hostConfig
-                .withAutoRemove(false)
+                .withAutoRemove(true)
                 .withMemory(1_073_741_824L)
                 .withCpuCount(1L)
                 .withRestartPolicy(RestartPolicy.noRestart());

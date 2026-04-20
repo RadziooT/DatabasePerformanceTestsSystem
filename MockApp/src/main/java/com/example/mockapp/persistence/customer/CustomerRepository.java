@@ -9,11 +9,9 @@ import java.util.Optional;
 
 public interface CustomerRepository extends JpaRepository<CustomerEntity, CustomerEntityId> {
 
-	Optional<CustomerEntity> findByWarehouseIdAndDistrictIdAndId(Long warehouseId, Long districtId, Long customerId);
+    Optional<CustomerEntity> findByWarehouseIdAndDistrictIdAndId(Long warehouseId, Long districtId, Long id);
 
-	Optional<CustomerEntity> findTopByWarehouseIdAndDistrictIdOrderByIdDesc(Long warehouseId, Long districtId);
+    Optional<CustomerEntity> findTopByWarehouseIdAndDistrictIdOrderByIdDesc(Long warehouseId, Long districtId);
 
-	List<CustomerEntity> findByWarehouseIdAndDistrictId(Long warehouseId, Long districtId);
-
-	List<CustomerEntity> findByWarehouseIdAndDistrictIdAndLastNameOrderByFirstNameAscIdAsc(Long warehouseId, Long districtId, String lastName);
+    List<CustomerEntity> findByWarehouseIdAndDistrictIdAndLastNameOrderByFirstNameAscIdAsc(Long warehouseId, Long districtId, String lastName);
 }

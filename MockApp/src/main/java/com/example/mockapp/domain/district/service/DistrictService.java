@@ -3,11 +3,11 @@ package com.example.mockapp.domain.district.service;
 import com.example.mockapp.common.exception.NotFoundException;
 import com.example.mockapp.domain.district.mapper.DistrictDomainMapper;
 import com.example.mockapp.domain.district.model.District;
-import com.example.mockapp.persistence.district.entity.DistrictEntity;
 import com.example.mockapp.persistence.district.DistrictRepository;
-import com.example.mockapp.persistence.order.OrderRepository;
-import com.example.mockapp.persistence.warehouse.entity.WarehouseEntity;
+import com.example.mockapp.persistence.district.entity.DistrictEntity;
+import com.example.mockapp.persistence.order.OrdersRepository;
 import com.example.mockapp.persistence.warehouse.WarehouseRepository;
+import com.example.mockapp.persistence.warehouse.entity.WarehouseEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +20,7 @@ import java.util.List;
 public class DistrictService {
 
     private final DistrictRepository districtRepository;
-    private final OrderRepository orderRepository;
+    private final OrdersRepository ordersRepository;
     private final WarehouseRepository warehouseRepository;
     private final DistrictDomainMapper mapper;
 
@@ -76,12 +76,11 @@ public class DistrictService {
                 .orElseThrow(() -> new NotFoundException("District not found with warehouseId=" + warehouseId + " and id=" + districtId));
 
         Long currentNextOrderId = existing.getNextOrderId() == null ? 1L : existing.getNextOrderId();
-        Long minAvailableOrderId = orderRepository.findTopByWarehouseIdAndDistrictIdOrderByIdDesc(warehouseId, districtId)
+        Long minAvailableOrderId = ordersRepository.findTopByWarehouseIdAndDistrictIdOrderByIdDesc(warehouseId, districtId)
                 .map(order -> order.getId() + 1)
                 .orElse(1L);
         Long allocatedOrderId = Math.max(currentNextOrderId, minAvailableOrderId);
 
-        // Keep the district counter in sync even if seed data drifted.
         existing.setNextOrderId(allocatedOrderId + 1);
         districtRepository.save(existing);
 

@@ -9,7 +9,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class OrderEntityId implements Serializable {
+public class OrdersEntityId implements Serializable {
 
     private Long warehouseId;
     private Long districtId;

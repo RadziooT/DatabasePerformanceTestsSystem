@@ -9,9 +9,7 @@ import java.util.Optional;
 
 public interface OrderLineRepository extends JpaRepository<OrderLineEntity, OrderLineEntityId> {
 
-    Optional<OrderLineEntity> findByWarehouseIdAndDistrictIdAndOrderIdAndLineNumber(Long warehouseId, Long districtId, Long orderId, Integer lineNumber);
-
     List<OrderLineEntity> findByWarehouseIdAndDistrictIdAndOrderIdOrderByLineNumberAsc(Long warehouseId, Long districtId, Long orderId);
 
-    List<OrderLineEntity> findByItemId(Long itemId);
+    Optional<OrderLineEntity> findByWarehouseIdAndDistrictIdAndOrderIdAndLineNumber(Long warehouseId, Long districtId, Long orderId, Integer lineNumber);
 }

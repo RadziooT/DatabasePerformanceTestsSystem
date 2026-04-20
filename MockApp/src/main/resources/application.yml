@@ -1,14 +1,23 @@
 spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 50
+
   jpa:
     hibernate:
       ddl-auto: none
     show-sql: false
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
+        generate_statistics: false
+        order_updates: false
+        jdbc:
+          batch_size: 50
         cache:
           use_second_level_cache: false
           use_query_cache: false
+
   sql:
     init:
       mode: never

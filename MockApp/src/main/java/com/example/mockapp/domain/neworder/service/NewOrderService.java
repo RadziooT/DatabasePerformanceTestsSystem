@@ -3,12 +3,12 @@ package com.example.mockapp.domain.neworder.service;
 import com.example.mockapp.common.exception.NotFoundException;
 import com.example.mockapp.domain.neworder.mapper.NewOrderDomainMapper;
 import com.example.mockapp.domain.neworder.model.NewOrder;
-import com.example.mockapp.persistence.neworder.entity.NewOrderEntity;
 import com.example.mockapp.persistence.neworder.NewOrderRepository;
+import com.example.mockapp.persistence.neworder.entity.NewOrderEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,10 +23,9 @@ public class NewOrderService {
         return mapper.toDomain(saved);
     }
 
-    public List<NewOrder> getByWarehouseAndDistrict(Long warehouseId, Long districtId) {
-        return newOrderRepository.findByWarehouseIdAndDistrictIdOrderByOrderIdAsc(warehouseId, districtId).stream()
-                .map(mapper::toDomain)
-                .toList();
+    public Optional<NewOrder> getOldestByWarehouseAndDistrictForUpdate(Long warehouseId, Long districtId) {
+        return newOrderRepository.findTopByWarehouseIdAndDistrictIdOrderByOrderIdAsc(warehouseId, districtId)
+                .map(mapper::toDomain);
     }
 
     public void delete(Long warehouseId, Long districtId, Long orderId) {

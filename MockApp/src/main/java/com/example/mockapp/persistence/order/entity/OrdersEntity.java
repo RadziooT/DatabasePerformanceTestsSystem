@@ -10,13 +10,13 @@ import java.time.LocalDateTime;
         @Index(name = "IDX_O_W_ID_O_D_ID_O_C_ID_O_ID", columnList = "O_W_ID,O_D_ID,O_C_ID,O_ID"),
         @Index(name = "IDX_O_W_ID_O_D_ID_O_ID", columnList = "O_W_ID,O_D_ID,O_ID")
 })
-@IdClass(OrderEntityId.class)
+@IdClass(OrdersEntityId.class)
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OrderEntity {
+public class OrdersEntity {
 
     @Id
     @Column(name = "O_W_ID", nullable = false)
