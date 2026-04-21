@@ -2,8 +2,8 @@ package example;
 
 import example.groups.ScenarioGroups;
 import example.utils.Config;
-import example.utils.WorkloadType;
 import example.utils.SimulationConfiguration;
+import example.utils.WorkloadType;
 import io.gatling.javaapi.core.ScenarioBuilder;
 import io.gatling.javaapi.core.Simulation;
 
@@ -17,7 +17,7 @@ public class PaymentSimulation extends Simulation {
             .on(ScenarioGroups.payment);
 
     {
-        setUp(SimulationConfiguration.injectionProfile(transactionScenario, WorkloadType.PAYMENT))
+        setUp(SimulationConfiguration.injectionProfile(transactionScenario))
                 .assertions(SimulationConfiguration.assertionsFor(WorkloadType.PAYMENT))
                 .protocols(Config.httpProtocol());
     }

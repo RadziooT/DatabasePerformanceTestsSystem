@@ -2,8 +2,8 @@ package example;
 
 import example.groups.ScenarioGroups;
 import example.utils.Config;
-import example.utils.WorkloadType;
 import example.utils.SimulationConfiguration;
+import example.utils.WorkloadType;
 import io.gatling.javaapi.core.ScenarioBuilder;
 import io.gatling.javaapi.core.Simulation;
 
@@ -17,7 +17,7 @@ public class MixedTpccSimulation extends Simulation {
             .on(ScenarioGroups.mixedWorkload);
 
     {
-        setUp(SimulationConfiguration.injectionProfile(mixedScenario, WorkloadType.MIXED_TPC))
+        setUp(SimulationConfiguration.injectionProfile(mixedScenario))
                 .assertions(SimulationConfiguration.assertionsFor(WorkloadType.MIXED_TPC))
                 .protocols(Config.httpProtocol());
     }

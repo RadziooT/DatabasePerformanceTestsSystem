@@ -1,28 +1,27 @@
 package example;
 
-import static io.gatling.javaapi.core.CoreDsl.*;
-
 import example.groups.ScenarioGroups;
 import example.utils.Config;
-import io.gatling.javaapi.core.*;
+import example.utils.SimulationConfiguration;
+import example.utils.WorkloadType;
+import io.gatling.javaapi.core.ScenarioBuilder;
+import io.gatling.javaapi.core.Simulation;
 import io.gatling.javaapi.http.HttpProtocolBuilder;
 
-import java.util.List;
+import static io.gatling.javaapi.core.CoreDsl.scenario;
 
 @SuppressWarnings("unused")
 public class BasicSimulation extends Simulation {
 
     private static final HttpProtocolBuilder httpProtocol = Config.httpProtocol();
 
-    static final List<Assertion> assertions = List.of(global().failedRequests().count().lt(1L));
-
     private static final ScenarioBuilder scenario = scenario("Basic configuration simulation")
             .exitBlockOnFail()
             .on(ScenarioGroups.basicSmokeTest);
 
     {
-        setUp(scenario.injectOpen(atOnceUsers(1)))
-                .assertions(assertions)
+        setUp(SimulationConfiguration.injectionProfile(scenario))
+                .assertions(SimulationConfiguration.assertionsFor(WorkloadType.BASIC))
                 .protocols(httpProtocol);
     }
 }

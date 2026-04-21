@@ -62,11 +62,11 @@ Runtime values are read from `src/main/resources/application.yml`.
 
 Data volume is controlled by `GENERATOR_VOLUME_TYPE` and mapped to warehouse count:
 
-- `SMALL` -> `10` warehouses
-- `MEDIUM` -> `25` warehouses
-- `LARGE` -> `50` warehouses
+- `SMALL` -> `2` warehouses
+- `MEDIUM` -> `10` warehouses
+- `LARGE` -> `100` warehouses
 
-Let `W` be the selected warehouse count (`10`, `25`, or `50`).
+Let `W` be the selected warehouse count (`2`, `10`, or `100`).
 
 TPC-C table row counts are generated with these formulas:
 

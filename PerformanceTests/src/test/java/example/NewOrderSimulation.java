@@ -2,8 +2,8 @@ package example;
 
 import example.groups.ScenarioGroups;
 import example.utils.Config;
-import example.utils.WorkloadType;
 import example.utils.SimulationConfiguration;
+import example.utils.WorkloadType;
 import io.gatling.javaapi.core.ScenarioBuilder;
 import io.gatling.javaapi.core.Simulation;
 
@@ -17,7 +17,7 @@ public class NewOrderSimulation extends Simulation {
             .on(ScenarioGroups.newOrder);
 
     {
-        setUp(SimulationConfiguration.injectionProfile(transactionScenario, WorkloadType.NEW_ORDER))
+        setUp(SimulationConfiguration.injectionProfile(transactionScenario))
                 .assertions(SimulationConfiguration.assertionsFor(WorkloadType.NEW_ORDER))
                 .protocols(Config.httpProtocol());
     }

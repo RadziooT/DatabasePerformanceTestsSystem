@@ -56,20 +56,38 @@ The run produces a Gatling HTML report in `target/gatling`.
 | --- | --- |--------------------------------------------------------------------------------|
 | `SIMULATION_CLASS` | `example.BasicSimulation` | Selects the Gatling simulation to execute.                                     |
 | `BASE_URL` | `http://host.docker.internal:8080` | Sets the base URL pointing to `MockApp` used by the HTTP protocol configuration. |
-| `DATASET_SIZE` | `NOT_SET` | Dataset marker used in output folder naming. Recommended values: `small`, `medium`, `large`. |
+| `DATASET_SIZE` | `NOT_SET` | Dataset size used in output naming and runtime scaling (`small`, `medium`, `large`). It controls warehouse count and `BasicSimulation` injection profile. |
 | `DATABASE_TYPE` | `NOT_SET` | Database marker used in output folder naming. Recommended values: `MYSQL`, `POSTGRES`, `ORACLE`, `SQLSERVER`. |
 
 The simulation reads `BASE_URL`, `DATASET_SIZE`, and `DATABASE_TYPE` through `example.utils.Config`, and the container image passes `SIMULATION_CLASS` to the Gatling run command.
 
 After the run, the container renames the latest generated Gatling folder to `simulationName-DATABASE_TYPE-DATASET_SIZE` (for example: `MixedTpccSimulation-POSTGRES-large`).
 
-### Shared load table (ramp duration stays at 30 seconds)
+### Dataset-size scaling
+
+Warehouse counts used by payload generation:
+
+| Dataset size | Warehouses |
+| --- | --- |
+| `small` | 2 |
+| `medium` | 10 |
+| `large` | 100 |
+
+### Shared load table for non-basic workloads (ramp duration stays at 30 seconds)
 
 | Dataset size | Basic | Mixed TPC-C | New-Order | Payment | Order-Status | Delivery | Stock-Level |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `small` | 120 | 200 | 140 | 160 | 90 | 70 | 90 |
-| `medium` | 300 | 500 | 360 | 400 | 220 | 180 | 220 |
-| `large` | 600 | 1000 | 720 | 800 | 450 | 360 | 450 |
+| `small` | n/a (dedicated profile below) | 200 | 140 | 160 | 90 | 70 | 90 |
+| `medium` | n/a (dedicated profile below) | 500 | 360 | 400 | 220 | 180 | 220 |
+| `large` | n/a (dedicated profile below) | 1000 | 720 | 800 | 450 | 360 | 450 |
+
+### BasicSimulation injection profile by dataset size
+
+| Dataset size | Injection profile |
+| --- | --- |
+| `small` | `rampUsers(10).during(30s)`, then `constantUsersPerSec(1).during(2m)` |
+| `medium` | `rampUsers(100).during(5m)`, then `constantUsersPerSec(100).during(15m)` |
+| `large` | `rampUsers(1000).during(10m)`, then `constantUsersPerSec(1000).during(30m)` |
 
 ## Architecture
 
