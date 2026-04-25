@@ -82,7 +82,7 @@ public class NewOrderTransaction {
                 allLocal = false;
             }
 
-            Stock stock = stockService.getByWarehouseAndItem(supplyWarehouseId, item.getId());
+            Stock stock = stockService.getByWarehouseAndItemForUpdate(supplyWarehouseId, item.getId());
             int updatedQuantity = stock.getQuantity() - quantity;
             if (updatedQuantity < 10) {
                 updatedQuantity += 100;

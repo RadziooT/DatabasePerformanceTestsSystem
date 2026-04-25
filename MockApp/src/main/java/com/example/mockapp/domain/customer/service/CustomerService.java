@@ -74,7 +74,7 @@ public class CustomerService {
             throw new IllegalArgumentException("Payment amount must not be null");
         }
 
-        CustomerEntity existingCustomer = customerRepository.findByWarehouseIdAndDistrictIdAndId(warehouseId, districtId, id)
+        CustomerEntity existingCustomer = customerRepository.findByWarehouseIdAndDistrictIdAndIdForUpdate(warehouseId, districtId, id)
                 .orElseThrow(() -> new NotFoundException("Customer not found with warehouseId=" + warehouseId + ", districtId=" + districtId + " and id=" + id));
 
         BigDecimal currentBalance = existingCustomer.getBalance() != null ? existingCustomer.getBalance() : BigDecimal.ZERO;

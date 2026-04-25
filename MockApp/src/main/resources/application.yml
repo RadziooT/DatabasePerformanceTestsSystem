@@ -11,7 +11,7 @@ spring:
       hibernate:
         format_sql: false
         generate_statistics: false
-        order_updates: false
+        order_updates: true
         jdbc:
           batch_size: 50
         cache:

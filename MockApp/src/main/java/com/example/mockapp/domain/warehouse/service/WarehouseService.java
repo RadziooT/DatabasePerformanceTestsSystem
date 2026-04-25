@@ -28,7 +28,7 @@ public class WarehouseService {
             throw new IllegalArgumentException("Payment amount must not be null");
         }
 
-        WarehouseEntity existing = warehouseRepository.findById(id)
+        WarehouseEntity existing = warehouseRepository.findByIdForUpdate(id)
                 .orElseThrow(() -> new NotFoundException("Warehouse not found with id: " + id));
 
         BigDecimal currentYtd = existing.getYearToDate() != null ? existing.getYearToDate() : BigDecimal.ZERO;

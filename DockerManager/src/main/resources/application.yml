@@ -19,7 +19,7 @@ docker:
     password: ${DOCKER_MANAGER_DB_PASSWORD}
     name: ${DOCKER_MANAGER_DB_NAME}
   performance-tests:
-    base-url: ${PERFORMANCE_TESTS_BASE_URL:http://host.docker.internal:8080}
+    base-url: ${PERFORMANCE_TESTS_BASE_URL:http://docker-manager-mock-app:8080}
 
 performance-tests:
   results-directory: ${GATLING_RESULTS_DIR:./target/gatling}

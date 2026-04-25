@@ -32,8 +32,14 @@ public class StockService {
         return getById(warehouseId, itemId);
     }
 
+    public Stock getByWarehouseAndItemForUpdate(Long warehouseId, Long itemId) {
+        StockEntity entity = stockRepository.findByWarehouseIdAndItemIdForUpdate(warehouseId, itemId)
+                .orElseThrow(() -> new NotFoundException("Stock not found for warehouseId=" + warehouseId + ", itemId=" + itemId));
+        return mapper.toDomain(entity);
+    }
+
     public Stock update(Long warehouseId, Long itemId, Stock updated) {
-        StockEntity existing = stockRepository.findByWarehouseIdAndItemId(warehouseId, itemId)
+        StockEntity existing = stockRepository.findByWarehouseIdAndItemIdForUpdate(warehouseId, itemId)
                 .orElseThrow(() -> new NotFoundException("Stock not found for warehouseId=" + warehouseId + ", itemId=" + itemId));
 
         existing.setWarehouseId(updated.getWarehouseId());

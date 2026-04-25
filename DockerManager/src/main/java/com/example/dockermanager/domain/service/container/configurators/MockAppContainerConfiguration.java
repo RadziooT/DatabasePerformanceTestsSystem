@@ -18,6 +18,9 @@ import java.util.Optional;
 @Component
 public class MockAppContainerConfiguration extends ContainerConfiguration {
 
+    private static final long MOCK_APP_MEMORY_LIMIT_BYTES = 805_306_368L;
+    private static final long MOCK_APP_CPU_COUNT = 2L;
+
     private final ContainerDefinitionService containerDefinitionService;
 
     public MockAppContainerConfiguration(DockerNetworkService dockerNetworkService, ContainerDefinitionService containerDefinitionService) {
@@ -48,7 +51,8 @@ public class MockAppContainerConfiguration extends ContainerConfiguration {
     @Override
     protected void applyCustomHostConfig(HostConfig hostConfig) {
         hostConfig
-                .withMemory(536_870_912L)
+                .withMemory(MOCK_APP_MEMORY_LIMIT_BYTES)
+                .withCpuCount(MOCK_APP_CPU_COUNT)
                 .withRestartPolicy(RestartPolicy.onFailureRestart(3));
     }
 
