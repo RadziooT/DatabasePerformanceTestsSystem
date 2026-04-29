@@ -24,4 +24,4 @@ COPY --from=builder /app/target/*.jar app.jar
 EXPOSE 8080
 
 # The Entrypoint allows Spring to pick up the SPRING_PROFILES_ACTIVE env var automatically
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_TOOL_OPTIONS $JAVA_OPTS -jar app.jar"]

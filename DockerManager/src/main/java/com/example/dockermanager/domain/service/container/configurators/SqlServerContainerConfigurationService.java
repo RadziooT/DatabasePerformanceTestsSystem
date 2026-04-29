@@ -7,6 +7,7 @@ import com.example.dockermanager.domain.service.container.DockerNetworkService;
 import com.github.dockerjava.api.command.CreateContainerCmd;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -26,6 +27,14 @@ public class SqlServerContainerConfigurationService extends DatabaseContainerCon
                                               ContainerDefinition definition,
                                               RuntimeConfigurationOverrideInput runtimeConfiguration) {
         createContainerCmd.withHealthcheck(buildHealthCheck("/opt/mssql-tools18/bin/sqlcmd -S localhost -C -U sa -P ${MSSQL_SA_PASSWORD:-$SA_PASSWORD} -Q 'SELECT 1' || exit 1"));
+    }
+
+    @Override
+    protected Map<String, String> runtimeEnvironmentOverrides(RuntimeConfigurationOverrideInput runtimeConfiguration) {
+        Map<String, String> overrides = new java.util.LinkedHashMap<>();
+        overrides.put("MSSQL_MEMORY_LIMIT_MB", "3072");
+        overrides.put("MSSQL_MAX_CONNECTIONS", "200");
+        return overrides;
     }
 
     @Override

@@ -11,4 +11,4 @@ RUN mvn -q clean package -DskipTests
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=builder /build/target/DataGenerator-*.jar app.jar
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_TOOL_OPTIONS $JAVA_OPTS -jar /app/app.jar"]

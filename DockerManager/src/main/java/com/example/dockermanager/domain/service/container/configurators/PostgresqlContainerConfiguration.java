@@ -26,6 +26,13 @@ public class PostgresqlContainerConfiguration extends DatabaseContainerConfigura
                                               ContainerDefinition definition,
                                               RuntimeConfigurationOverrideInput runtimeConfiguration) {
         createContainerCmd.withHealthcheck(buildHealthCheck("pg_isready -d $POSTGRES_DB -U $POSTGRES_USER || exit 1"));
+
+        createContainerCmd.withCmd(
+                "-c", "shared-buffers=2GB",
+                "-c", "work-mem=16MB",
+                "-c", "maintenance_work_mem=256MB",
+                "-c", "effective_cache_size=3GB"
+        );
     }
 
     @Override

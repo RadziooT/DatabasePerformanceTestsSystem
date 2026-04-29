@@ -14,6 +14,9 @@ import java.util.Optional;
 @Component
 public class GatlingContainerConfiguration extends ContainerConfiguration {
 
+    private static final long GATLING_MEMORY_LIMIT_BYTES = 2_147_483_648L; // 2GB
+    private static final long GATLING_CPU_COUNT = 2L;
+
     public GatlingContainerConfiguration(DockerNetworkService dockerNetworkService) {
         super(dockerNetworkService);
     }
@@ -33,6 +36,7 @@ public class GatlingContainerConfiguration extends ContainerConfiguration {
         overrides.put("SIMULATION_CLASS", runtimeConfiguration.getPerformanceTestsContainerParams().performanceTestSimulationType().getSimulationClass());
         overrides.put("DATASET_SIZE", runtimeConfiguration.getPerformanceTestsContainerParams().testedVolumeType().name());
         overrides.put("DATABASE_TYPE", runtimeConfiguration.getPerformanceTestsContainerParams().databaseType().name());
+        overrides.put("JAVA_OPTS", "-Xms2g -Xmx2g");
 
         return overrides;
     }
@@ -41,8 +45,11 @@ public class GatlingContainerConfiguration extends ContainerConfiguration {
     protected void applyCustomHostConfig(HostConfig hostConfig) {
         hostConfig
                 .withAutoRemove(true)
-                .withMemory(1_073_741_824L)
-                .withCpuCount(2L)
+                .withMemory(GATLING_MEMORY_LIMIT_BYTES)
+                .withMemorySwap(GATLING_MEMORY_LIMIT_BYTES)
+                .withCpuCount(GATLING_CPU_COUNT)
+                .withCpuPeriod(100_000L)
+                .withCpuQuota(200_000L)
                 .withRestartPolicy(RestartPolicy.noRestart());
     }
 

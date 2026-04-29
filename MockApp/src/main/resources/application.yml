@@ -1,7 +1,7 @@
 spring:
   datasource:
     hikari:
-      maximum-pool-size: 50
+      maximum-pool-size: 20
 
   jpa:
     hibernate:
@@ -24,7 +24,11 @@ spring:
 
 server:
   port: 8080
+  tomcat:
+    threads:
+      max: 80
 
 logging:
   level:
     org.hibernate.SQL: ERROR
+    root: error

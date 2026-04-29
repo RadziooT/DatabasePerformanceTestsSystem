@@ -70,17 +70,11 @@ public class DistrictService {
         return mapper.toDomain(saved);
     }
 
-    @Transactional
     public Long getAndIncrementNextOrderId(Long warehouseId, Long districtId) {
         DistrictEntity existing = districtRepository.findByWarehouseIdAndIdForUpdate(warehouseId, districtId)
                 .orElseThrow(() -> new NotFoundException("District not found with warehouseId=" + warehouseId + " and id=" + districtId));
 
-        Long currentNextOrderId = existing.getNextOrderId() == null ? 1L : existing.getNextOrderId();
-        Long minAvailableOrderId = ordersRepository.findTopByWarehouseIdAndDistrictIdOrderByIdDesc(warehouseId, districtId)
-                .map(order -> order.getId() + 1)
-                .orElse(1L);
-        Long allocatedOrderId = Math.max(currentNextOrderId, minAvailableOrderId);
-
+        Long allocatedOrderId = existing.getNextOrderId();
         existing.setNextOrderId(allocatedOrderId + 1);
         districtRepository.save(existing);
 

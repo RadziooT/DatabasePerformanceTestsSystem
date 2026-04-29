@@ -18,7 +18,7 @@ import java.util.Optional;
 @Component
 public class MockAppContainerConfiguration extends ContainerConfiguration {
 
-    private static final long MOCK_APP_MEMORY_LIMIT_BYTES = 805_306_368L;
+    private static final long MOCK_APP_MEMORY_LIMIT_BYTES = 3_221_225_472L; // 3GB
     private static final long MOCK_APP_CPU_COUNT = 2L;
 
     private final ContainerDefinitionService containerDefinitionService;
@@ -44,6 +44,7 @@ public class MockAppContainerConfiguration extends ContainerConfiguration {
         overrides.put("DB_NAME", databaseProperties.databaseName());
         overrides.put("DB_USERNAME", databaseProperties.user());
         overrides.put("DB_PASSWORD", databaseProperties.password());
+        overrides.put("JAVA_OPTS", "-Xms3g -Xmx3g");
 
         return overrides;
     }
@@ -52,7 +53,10 @@ public class MockAppContainerConfiguration extends ContainerConfiguration {
     protected void applyCustomHostConfig(HostConfig hostConfig) {
         hostConfig
                 .withMemory(MOCK_APP_MEMORY_LIMIT_BYTES)
+                .withMemorySwap(MOCK_APP_MEMORY_LIMIT_BYTES)
                 .withCpuCount(MOCK_APP_CPU_COUNT)
+                .withCpuPeriod(100_000L)
+                .withCpuQuota(200_000L)
                 .withRestartPolicy(RestartPolicy.onFailureRestart(3));
     }
 

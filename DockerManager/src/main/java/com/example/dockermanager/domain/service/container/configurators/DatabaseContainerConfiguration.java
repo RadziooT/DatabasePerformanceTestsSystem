@@ -9,7 +9,7 @@ import java.util.List;
 
 public abstract class DatabaseContainerConfiguration extends ContainerConfiguration {
 
-    protected static final long DATABASE_MEMORY_LIMIT_BYTES = 2_147_483_648L;
+    protected static final long DATABASE_MEMORY_LIMIT_BYTES = 3_221_225_472L; // 3GB
     protected static final long DATABASE_CPU_COUNT = 2L;
     protected static final long DATABASE_HEALTHCHECK_INTERVAL_NANOS = 10_000_000_000L;
     protected static final long DATABASE_HEALTHCHECK_TIMEOUT_NANOS = 10_000_000_000L;
@@ -24,7 +24,10 @@ public abstract class DatabaseContainerConfiguration extends ContainerConfigurat
     protected void applyCustomHostConfig(HostConfig hostConfig) {
         hostConfig
                 .withMemory(DATABASE_MEMORY_LIMIT_BYTES)
+                .withMemorySwap(DATABASE_MEMORY_LIMIT_BYTES)
                 .withCpuCount(DATABASE_CPU_COUNT)
+                .withCpuPeriod(100_000L)
+                .withCpuQuota(200_000L)
                 .withRestartPolicy(RestartPolicy.unlessStoppedRestart());
         applyAdditionalHostConfig(hostConfig);
     }

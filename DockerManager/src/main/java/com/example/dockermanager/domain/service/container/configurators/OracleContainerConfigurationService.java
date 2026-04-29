@@ -8,6 +8,7 @@ import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.model.HostConfig;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -35,6 +36,15 @@ public class OracleContainerConfigurationService extends DatabaseContainerConfig
                 "/opt/oracle/healthcheck.sh || exit 1",
                 ORACLE_HEALTHCHECK_START_PERIOD_NANOS
         ));
+    }
+
+    @Override
+    protected Map<String, String> runtimeEnvironmentOverrides(RuntimeConfigurationOverrideInput runtimeConfiguration) {
+        Map<String, String> overrides = new java.util.LinkedHashMap<>();
+        overrides.put("ORACLE_SGA_TARGET", "2048M");
+        overrides.put("ORACLE_PGA_AGGREGATE_TARGET", "512M");
+
+        return overrides;
     }
 
     @Override

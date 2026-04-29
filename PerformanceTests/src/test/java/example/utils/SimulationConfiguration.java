@@ -15,17 +15,17 @@ public final class SimulationConfiguration {
 
     public static PopulationBuilder injectionProfile(ScenarioBuilder scenario) {
         return switch (Config.datasetSize) {
-            case SMALL -> scenario.injectOpen(
-                    rampUsers(10).during(Duration.ofSeconds(30)),
-                    constantUsersPerSec(10).during(Duration.ofMinutes(2))
+            case SMALL -> scenario.injectClosed(
+                    rampConcurrentUsers(0).to(10).during(Duration.ofSeconds(30)),
+                    constantConcurrentUsers(10).during(Duration.ofMinutes(5))
             );
-            case MEDIUM -> scenario.injectOpen(
-                    rampUsers(100).during(Duration.ofMinutes(5)),
-                    constantUsersPerSec(100).during(Duration.ofMinutes(15))
+            case MEDIUM -> scenario.injectClosed(
+                    rampConcurrentUsers(0).to(25).during(Duration.ofMinutes(1)),
+                    constantConcurrentUsers(25).during(Duration.ofMinutes(10))
             );
-            case LARGE -> scenario.injectOpen(
-                    rampUsers(1000).during(Duration.ofMinutes(10)),
-                    constantUsersPerSec(1000).during(Duration.ofMinutes(30))
+            case LARGE -> scenario.injectClosed(
+                    rampConcurrentUsers(0).to(40).during(Duration.ofMinutes(2)),
+                    constantConcurrentUsers(40).during(Duration.ofMinutes(15))
             );
         };
     }

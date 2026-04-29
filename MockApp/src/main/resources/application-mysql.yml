@@ -4,6 +4,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${DB_USERNAME:mockapp}
     password: ${DB_PASSWORD:mockapp}
+    hikari:
+      transaction-isolation: TRANSACTION_READ_COMMITTED
   jpa:
     properties:
       hibernate:

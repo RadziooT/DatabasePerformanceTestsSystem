@@ -22,9 +22,9 @@ import java.time.Instant;
 public abstract class AbstractDataGenerationStrategy implements DataGenerationStrategy {
 
     protected static final int ITEM_COUNT = 100_000;
-    protected static final int SMALL_WAREHOUSE_COUNT = 2;
-    protected static final int MEDIUM_WAREHOUSE_COUNT = 10;
-    protected static final int LARGE_WAREHOUSE_COUNT = 100;
+    protected static final int SMALL_WAREHOUSE_COUNT = 1;
+    protected static final int MEDIUM_WAREHOUSE_COUNT = 5;
+    protected static final int LARGE_WAREHOUSE_COUNT = 10;
     protected static final int DISTRICT_COUNT = 10;
     protected static final int CUSTOMER_PER_DISTRICT = 3_000;
     protected static final int ORDER_PER_DISTRICT = 3_000;

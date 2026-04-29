@@ -3,6 +3,8 @@ spring:
     url: jdbc:sqlserver://${DB_HOST:sqlserver}:${DB_PORT:1433};databaseName=${DB_NAME:mockapp};encrypt=false
     username: ${DB_USERNAME:mockapp}
     password: ${DB_PASSWORD:mockapp}
+    hikari:
+      transaction-isolation: TRANSACTION_READ_COMMITTED
   jpa:
     properties:
       hibernate:

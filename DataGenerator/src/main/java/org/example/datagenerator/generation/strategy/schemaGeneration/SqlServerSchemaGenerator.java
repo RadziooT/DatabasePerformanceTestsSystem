@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 @Slf4j
 public class SqlServerSchemaGenerator extends AbstractSchemaGenerationStrategy {
@@ -15,6 +16,20 @@ public class SqlServerSchemaGenerator extends AbstractSchemaGenerationStrategy {
 
     @Override
     public void createSchema() {
+        try (Connection conn = dataSource.getConnection()) {
+            conn.setAutoCommit(true);
+            try (Statement stmt = conn.createStatement()) {
+                stmt.execute("""
+                    ALTER DATABASE testDb 
+                    SET READ_COMMITTED_SNAPSHOT ON
+                    WITH ROLLBACK IMMEDIATE
+                """);
+            }
+            log.info("SQL Server READ_COMMITTED defined");
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to define SQL Server READ_COMMITTED", e);
+        }
+
         try (Connection conn = dataSource.getConnection()) {
             executeSql(conn, """
                     IF OBJECT_ID('order_line', 'U') IS NOT NULL DROP TABLE order_line;

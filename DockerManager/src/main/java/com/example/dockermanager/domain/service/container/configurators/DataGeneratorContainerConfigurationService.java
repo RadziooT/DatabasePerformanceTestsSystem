@@ -20,6 +20,9 @@ import java.util.Optional;
 @Component
 public class DataGeneratorContainerConfigurationService extends ContainerConfiguration {
 
+    private static final long DATA_GENERATOR_MEMORY_LIMIT_BYTES = 2_147_483_648L; // 2GB
+    private static final long DATA_GENERATOR_CPU_COUNT = 2L;
+
     private final ContainerDefinitionService containerDefinitionService;
     @Value("${data-generation.callback-url}")
     private String callbackUrl;
@@ -51,6 +54,7 @@ public class DataGeneratorContainerConfigurationService extends ContainerConfigu
         env.put("GENERATOR_DB_PASSWORD", databaseProperties.password());
         env.put("GENERATOR_CALLBACK_URL", callbackUrl);
         env.put("GENERATOR_CALLBACK_TOKEN", callbackToken);
+        env.put("JAVA_OPTS", "-Xms2g -Xmx2g");
 
         return env;
     }
@@ -59,8 +63,11 @@ public class DataGeneratorContainerConfigurationService extends ContainerConfigu
     protected void applyCustomHostConfig(HostConfig hostConfig) {
         hostConfig
                 .withAutoRemove(true)
-                .withMemory(1_073_741_824L)
-                .withCpuCount(1L)
+                .withMemory(DATA_GENERATOR_MEMORY_LIMIT_BYTES)
+                .withMemorySwap(DATA_GENERATOR_MEMORY_LIMIT_BYTES)
+                .withCpuCount(DATA_GENERATOR_CPU_COUNT)
+                .withCpuPeriod(100_000L)
+                .withCpuQuota(200_000L)
                 .withRestartPolicy(RestartPolicy.noRestart());
     }
 
